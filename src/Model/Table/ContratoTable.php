@@ -28,6 +28,55 @@
 				->fetch('class');
 		}
 
+		public function listaContratosPorCod(int $contratante)
+		{
+			return $this->find([
+					'c.seq', 'c.data_vencimento as vencimento', 'c.data_ativacao ativacao', 
+					'c.valor_contrato as valor', 'c.data_ultima_cobranca as ultima_cobranca', 
+					'm.descricao as modalidade', 'c.nota_fiscal_eletronica as nfe', 
+					'c.num_termi_adm as termi_adm', 
+					"case when(c.status = 8 and c.cancelado = 'T') 
+        				then 'CANCELADO'
+        				else s.descricao 
+    				end as status"
+				])
+				->from(['contrato c', 'modalidade m', 'status s'])
+				->where([
+					'c.contratante =' => $contratante, 'and', 
+					'c.modalidade = m.seq', 'and', 
+					'c.status = s.seq'
+				])
+				->fetch('all');
+		}
+
+		/*public function listarAtivos()
+		{
+			return $this->find([])
+				->sum('case when data_inclusao = '. $dataDeHoje .' then 1 else 0 end')->as('hoje')
+				->count('contratante')->as('total')
+				->where(['status !=' => 8])
+				->fetch('class');
+		}*/
+
+		/*public function listarAtivos(int $quantity = null, int $skipTo = null)
+		{
+			$cadastros = $this->find([
+				'valor_contrato', 'data_inclusao', 'data_ativacao', 'data_vencimento',
+				'modalidade', 
+			]);
+
+			if (!empty($quantity)) {
+				$cadastros->limit($quantity);
+			}
+			if (!empty($skipTo)) {
+				$cadastros->skip($skipTo);
+			}
+				
+			return $cadastros->orderBy(['razao'])
+				->where(['ativo =' => 'T'])
+				->fetch('all');
+		}*/
+
 		protected function defaultValidator(Validator $validator)
 		{
 			$validator->addRule('seq')->notEmpty()->int()->size(4);

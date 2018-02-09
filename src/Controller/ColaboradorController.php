@@ -12,25 +12,30 @@
 		
 		public function login()
 		{
-			if ($this->request->is('POST')) {
-				$dados = array_map('removeSpecialChars', $this->request->getData());
-				
-				if (!empty($dados['login']) && !empty($dados['senha'])) {
-					$colaborador = $this->Colaborador->validaAcesso($dados['login'], $dados['senha']);
+			if (!empty($this->Auth->getUser('nome'))) {
+				return $this->redirect(['controller' => 'Page', 'view' => 'home']);
+			}
+			else {
+				if ($this->request->is('POST')) {
+					$dados = array_map('removeSpecialChars', $this->request->getData());
+					
+					if (!empty($dados['login']) && !empty($dados['senha'])) {
+						$colaborador = $this->Colaborador->validaAcesso($dados['login'], $dados['senha']);
 
-					if ($colaborador) {
-						$this->Auth->setUser($colaborador);
-						return $this->redirect($this->Auth->loginRedirect());
+						if ($colaborador) {
+							$this->Auth->setUser($colaborador);
+							return $this->redirect($this->Auth->loginRedirect());
+						}
+						else {
+							$this->Flash->error('Usuário ou senha incorreto, tente novamente.');
+						}
 					}
 					else {
-						$this->Flash->error('Usuário ou senha incorreto, tente novamente.');
+						$this->Flash->error('Os campos usuário e senha são obrigatórios.');
 					}
 				}
-				else {
-					$this->Flash->error('Os campos usuário e senha são obrigatórios.');
-				}
+				$this->setTitle('Início');
 			}
-			$this->setTitle('Início');
 		}
 
 		public function mudarSenha()

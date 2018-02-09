@@ -56,14 +56,14 @@
 				$cadastro->ativo = 'T';
 
 				if ($this->Cadastro->cadastroExistente($cadastro->cnpj)) {
-					$tipoCadastro = (strlen($cadastro->cnpj) === 18) ? 'CNPJ' : 'CPF';
+					$tipoCadastro = (strlen($cadastro->cnpj) === 14) ? 'CNPJ' : 'CPF';
 
 					$this->Flash->error(
 						'Desculpe, o ' . $tipoCadastro . ' (' . $cadastro->cnpj . ') já está em uso.'
 					);
 				}
 				else if ($this->Cadastro->save($cadastro)) {
-					if (strlen($cadastro->cnpj) === 18) {
+					if (strlen($cadastro->cnpj) === 14) {
 						if ($this->Cadastro->criaBaseDados($cadastro->cnpj)) {
 							$this->Flash->success(
 								'A adição do cliente (' . $cadastro->razao . ') e a criação da base de dados, foram concluídos com sucesso.

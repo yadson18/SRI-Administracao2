@@ -8,6 +8,32 @@ $(document).ready(function(){
         });
     }
 
+    function removeAcentuacao(palavra) {
+        var palavraFormatada = palavra;
+        var mapaAcentosHex = {
+            a: /[\xE0-\xE6]/g,
+            A: /[\xC0-\xC6]/g,
+            e: /[\xE8-\xEB]/g,
+            E: /[\xC8-\xCB]/g,
+            i: /[\xEC-\xEF]/g,
+            I: /[\xCC-\xCF]/g,
+            o: /[\xF2-\xF6]/g,
+            O: /[\xD2-\xD6]/g,
+            u: /[\xF9-\xFC]/g,
+            U: /[\xD9-\xDC]/g,
+            c: /\xE7/g,
+            C: /\xC7/g,
+            n: /\xF1/g,
+            N: /\xD1/g,
+        };
+
+        for ( var letra in mapaAcentosHex ) {
+            palavraFormatada = palavraFormatada.replace(mapaAcentosHex[letra], letra);
+        }
+
+        return palavraFormatada;
+    }
+
     var $destinatarie = (function() {
         var cpf, cnpj, rg, inscricaoEstadual;
 
@@ -57,7 +83,15 @@ $(document).ready(function(){
     $('#breadcrumb .destinatarie-type a').on('click', function() {
         var $DOM = {
             inputCnpj: $('input[name=cnpj]'),
-            divEstadual: $('div.estadual')
+            divEstadual: $('div.estadual'),
+            divCnpj: $('.cnpj-block'),
+            mensagem: $('.form-content .message-box'),
+            complemento: $('input[name=complementar]'),
+            estadual: $('input[name=estadual]'),
+            fantasia: $('input[name=fantasia]'),
+            numero: $('input[name=nrend1]'),
+            razao: $('input[name=razao]'),
+            cep: $('input[name=cep]')
         };
 
         $('#breadcrumb .destinatarie-type li').removeClass('active');
@@ -68,39 +102,138 @@ $(document).ready(function(){
                 $destinatarie.setCnpj($DOM.inputCnpj.val());
                 $destinatarie.setInscEstadual($DOM.divEstadual.find('input').val());
 
-                $DOM.inputCnpj.closest('div').find('label').text('CPF');
                 $DOM.divEstadual.find('label').text('N° Identidade');
                 $DOM.divEstadual.find('input').addClass('rgMask').attr({ 
-                    placeholder: 'EX: 45.570.332-2',
-                    maxlength: 12
-                }).val($destinatarie.getRg()).mask('00.000.000-0', $defaultMaskConfigs);
+                        placeholder: 'EX: 45.570.332-2',
+                        maxlength: 12
+                    })
+                    .val($destinatarie.getRg()).mask('00.000.000-0', $defaultMaskConfigs);
+
+                $DOM.divCnpj.find('label').text('CPF');
+                $DOM.divCnpj.find('.group-input').removeAttr('class').addClass('col-sm-12 group group-input');
                 $DOM.inputCnpj.removeClass('cnpjMask').addClass('cpfMask').attr({ 
-                    placeholder: 'EX: 095.726.241-80',
-                    maxlength: 14
-                })
-                .val($destinatarie.getCpf()).mask(
-                    '000.000.000-00', $defaultMaskConfigs
-                ).focusout();
+                        placeholder: 'EX: 095.726.241-80',
+                        maxlength: 14
+                    })
+                    .val($destinatarie.getCpf()).mask(
+                        '000.000.000-00', $defaultMaskConfigs
+                    ).focusout();
+                $DOM.divCnpj.find('.group-button').addClass('hidden').off('click');
                 break;
             case 'CNPJ':
                 $destinatarie.setCpf($DOM.inputCnpj.val());
                 $destinatarie.setRg($DOM.divEstadual.find('input').val());
 
-                $DOM.inputCnpj.closest('div').find('label').text('CNPJ');
                 $DOM.divEstadual.find('label').text('Inscrição Estadual');
                 $DOM.divEstadual.find('input').removeClass('rgMask').attr({ 
-                    placeholder: 'EX: ISENTO', 
-                    maxlength: 20 
-                }).val($destinatarie.getInscEstadual()).unmask();
+                        placeholder: 'EX: ISENTO', 
+                        maxlength: 20 
+                    })
+                    .val($destinatarie.getInscEstadual()).unmask();
+
+                $DOM.divCnpj.find('label').text('CNPJ');
+                $DOM.divCnpj.find('.group-input').removeAttr('class').addClass('col-sm-10 col-xs-10 group group-input');
                 $DOM.inputCnpj.removeClass('cpfMask').addClass('cnpjMask').attr({ 
-                    maxlength: 18, 
-                    placeholder: 'EX: 53.965.649/0001-03' 
-                })
-                .val($destinatarie.getCnpj()).mask(
-                    '00.000.000/0000-00', $defaultMaskConfigs
-                ).focusout();
+                        maxlength: 18, 
+                        placeholder: 'EX: 53.965.649/0001-03' 
+                    })
+                    .val($destinatarie.getCnpj()).mask(
+                        '00.000.000/0000-00', $defaultMaskConfigs
+                    ).focusout();
+                $DOM.divCnpj.find('.group-button').removeClass('hidden')
+                    .off('click').on('click', function() {
+                        if ($DOM.inputCnpj.cleanVal() !== '') {
+                            $.ajax({
+                                url: 'http://receitaws.com.br/v1/cnpj/' + $DOM.inputCnpj.cleanVal(),
+                                crossDomain: true,
+                                dataType: 'jsonp'
+                            })
+                            .always(function(dados, status) {
+                                if (status === 'success') {
+                                    if (dados.status === 'OK') {
+                                        if (dados.situacao === 'ATIVA') {
+                                            $DOM.razao.val(dados.nome);
+                                            $DOM.fantasia.val(dados.fantasia);
+                                            $DOM.cep.val(
+                                                dados.cep.replace(/[.]/g, '')
+                                            ).closest('div').find('i').click();
+                                            $DOM.numero.val(dados.numero);
+                                            $DOM.complemento.val(dados.complemento);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            $DOM.mensagem.bootstrapAlert('error', 'Por favor, digite o CNPJ.');
+                        }
+                    });
                 break;
         }
+    });
+
+    function dataFormatoBr(data) {
+        return data.split('-').reverse().join('/');
+    }
+
+    $('#cadastro-index #contracts').on('show.bs.modal', function(evento) {
+        var $DOM = {
+            mensagem: $(this).find('.message-box'),
+            carregando: $('#contracts .loading'),
+            tabela: $(this).find('table tbody'),
+            botao: $(evento.relatedTarget)
+        };
+
+        $.ajax({
+            url: '/Contrato/listaContratosPorCod',
+            method: 'POST',
+            dataType: 'json',
+            data: { contratante: $DOM.botao.val() },
+            beforeSend: function() {
+                $DOM.carregando.removeClass('hidden');
+            }
+        })
+        .always(function(dados, status) {
+            $DOM.carregando.addClass('hidden');
+
+            if (status === 'success') {
+                if (dados.status === 'success') {
+                    var $linhaAtual = null;
+                    var $linhas = [];
+
+                    for (var indice in dados.data) {
+                        $linhaAtual = dados.data[indice];
+
+                        $linhas.push($('<tr></tr>', {
+                            html: [
+                                $('<th></th>', { html: (++indice) }),
+                                $('<td></td>', { html: $linhaAtual.seq }),
+                                $('<td></td>', { html: dataFormatoBr($linhaAtual.vencimento) }),
+                                $('<td></td>', { html: dataFormatoBr($linhaAtual.ativacao) }),
+                                $('<td></td>', { html: dataFormatoBr($linhaAtual.ultima_cobranca) }),
+                                $('<td></td>', { html: $linhaAtual.valor}).mask(
+                                    '000.000.000,0', { reverse: true }
+                                ),
+                                $('<td></td>', { html: $linhaAtual.modalidade.toLowerCase() }),
+                                $('<td></td>', { html: ($linhaAtual.nfe == 1) ? 'Sim' : 'Não' }),
+                                $('<td></td>', { html: $linhaAtual.termi_adm }),
+                                $('<td></td>', { html: $linhaAtual.status.toLowerCase() })
+                            ]
+                        }));
+                    }
+
+                    $DOM.tabela.append($linhas);
+                }
+                else {
+                    $DOM.mensagem.bootstrapAlert(dados.status, dados.message);
+                }
+            }
+            else {
+                $DOM.mensagem.bootstrapAlert(
+                    'warning', 'Não foi possível completar a operação, verifique sua conexão com a internet.'
+                );
+            }
+        });
     });
 
     $('#cadastro-index #delete').on('show.bs.modal', function(evento) {
@@ -176,7 +309,7 @@ $(document).ready(function(){
     });
 
     $('#find-cep').on('click', function() {
-        $DOM = {
+        var $DOM = {
             estado: $('select[name=estado] option'),
             cidade: $('select[name=cidade] option'),
             endereco: $('input[name=endereco]'),
@@ -201,6 +334,7 @@ $(document).ready(function(){
                 }
             })
             .always(function(dados, status) {
+                console.log(dados);
                 var $opcoes = [];
                 var $opcao = null;
                 $DOM.estado.parent().prop('disabled', false);
@@ -209,7 +343,7 @@ $(document).ready(function(){
                 $DOM.bairro.prop('disabled', false);
 
                 if (status === 'success' && !dados.erro) {
-                    var cidade = dados.localidade.toUpperCase();
+                    var cidade = removeAcentuacao(dados.localidade).toUpperCase();
                     $DOM.estado.filter(':contains('+ dados.uf +')').prop('selected', true);
                     $DOM.cidade.filter(':contains('+ cidade +')').prop('selected', true);
                     $DOM.endereco.val(dados.logradouro.toUpperCase());

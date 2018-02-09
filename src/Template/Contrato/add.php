@@ -1,1 +1,1 @@
-<?php debug($cadastro) ?>
+<?php debug($cadastro); ?>

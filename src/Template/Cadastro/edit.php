@@ -21,17 +21,40 @@
 				<div class='row'>
 					<div class='row'>
 						<div class='col-sm-12'>
-							<div class='form-group col-sm-6 icon-right'>
-								<?= $this->Form->input(strtoupper($cadastroTipo) , [
-										'class' => $cadastroTipo . 'Mask form-control input-sm',
-										'placeholder' => ($cadastroTipo === 'cnpj') 
-											? 'EX: 53.965.649/0001-03' 
-											: 'EX: 095.726.241-80',
-										'value' => $cadastro->cnpj,
-										'autofocus' => true,
-										'name' => 'cnpj'
-									]) 
-								?>	
+							<div class='form-group col-sm-6 icon-right cnpj-block'>
+								<label><?= strtoupper($cadastroTipo) ?></label>
+								<div class='row'>
+									<div class='col-sm-12'>
+										<?php if ($cadastroTipo === 'cnpj'): ?>
+											<div class='col-sm-10 col-xs-10 group group-input'>
+												<?= $this->Form->input('' , [
+														'class' => 'cnpjMask form-control input-sm',
+														'placeholder' => 'EX: 53.965.649/0001-03',
+														'value' => $cadastro->cnpj,
+														'autofocus' => true,
+														'name' => 'cnpj'
+													]) 
+												?>	
+											</div>
+											<div class='col-sm-2 col-xs-2 group group-button'>
+												<button id='find-cnpj' class='btn btn-primary btn-sm btn-block' type='button'>
+													<i class='fas fa-search'></i>
+												</button>
+											</div>
+										<?php else: ?>
+											<div class='col-sm-12 group group-input'>
+												<?= $this->Form->input('' , [
+														'class' => 'cpfMask form-control input-sm',
+														'placeholder' => 'EX: 095.726.241-80',
+														'value' => $cadastro->cnpj,
+														'autofocus' => true,
+														'name' => 'cnpj'
+													]) 
+												?>	
+											</div>
+										<?php endif ?>
+									</div>
+								</div>
 							</div>
 							<div class='form-group col-sm-6 estadual'>
 								<?php if($cadastroTipo === 'cnpj'): ?>

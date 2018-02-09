@@ -3,7 +3,13 @@
 .default-styles();
 
 #cadastro-index {
-
+	table tbody td .badge {
+		.margin-bottom(5px);
+		.padding(2px 15px)
+	}
+	#contracts .loading .change-loading-height {
+		.height(36.3em);
+	}
 }
 #cadastro-add {
 	
@@ -12,6 +18,14 @@
 
 }
 #cadastro-add, #cadastro-edit{
+	.cnpj-block {
+		div.group {
+			.padding(0);
+		}
+		div.group.group-input.col-sm-10 {
+			.padding-right(7px);
+		}
+	}
 	.form-content .form-header {
 		.border-bottom(none);
 	}

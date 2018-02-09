@@ -120,9 +120,12 @@
 		public function listarAtivos(int $quantity = null, int $skipTo = null)
 		{
 			$cadastros = $this->find([
-				'cod_cadastro', 'cnpj', 'razao', 'fantasia', 
-				'estado', 'cidade', 'cep', 'endereco', 'bairro'
-			]);
+					'ca.cod_cadastro', 'ca.cnpj', 'ca.razao', 'ca.fantasia', 
+					'ca.estado', 'ca.cidade', 'ca.cep', 'ca.endereco', 'ca.bairro'
+				])
+				->count('co.seq')->as('contratos')
+				->from(['cadastro ca'])
+				->join(['left join contrato co on(co.contratante = ca.cod_cadastro)']);
 
 			if (!empty($quantity)) {
 				$cadastros->limit($quantity);
@@ -132,7 +135,11 @@
 			}
 				
 			return $cadastros->orderBy(['razao'])
-				->where(['ativo =' => 'T'])
+				->where(['ca.ativo =' => 'T'])
+				->groupBy([
+					'ca.cod_cadastro', 'ca.cnpj', 'ca.razao', 'ca.fantasia', 
+					'ca.estado', 'ca.cidade', 'ca.cep', 'ca.endereco', 'ca.bairro'
+				])
 				->fetch('all');
 		}
 

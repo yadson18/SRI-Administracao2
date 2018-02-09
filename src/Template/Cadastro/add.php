@@ -20,14 +20,26 @@
 			<div class='row'>
 				<div class='row'>
 					<div class='col-sm-12'>
-						<div class='form-group col-sm-6 icon-right'>
-							<?= $this->Form->input('CPF' , [
-									'class' => 'form-control input-sm cpfMask',
-									'placeholder' => 'EX: 095.726.241-80',
-									'autofocus' => true,
-									'name' => 'cnpj'
-								]) 
-							?>	
+						<div class='form-group col-sm-6 icon-right cnpj-block'>
+							<label>CPF</label>
+							<div class='row'>
+								<div class='col-sm-12'>
+									<div class='col-sm-12 group group-input'>
+										<?= $this->Form->input('' , [
+												'class' => 'form-control input-sm cpfMask',
+												'placeholder' => 'EX: 095.726.241-80',
+												'autofocus' => true,
+												'name' => 'cnpj'
+											]) 
+										?>	
+									</div>
+									<div class='col-sm-2 col-xs-2 group group-button hidden'>
+										<button id='find-cnpj' class='btn btn-primary btn-sm btn-block' type='button'>
+											<i class='fas fa-search'></i>
+										</button>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div class='form-group col-sm-6 estadual'>
 							<?= $this->Form->input('N° Identidade', [

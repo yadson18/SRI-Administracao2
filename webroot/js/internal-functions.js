@@ -124,12 +124,12 @@ $(document).ready(function(){
             if (status === 'success' && 
                 !(/^(.)\1+$/.test($input.cleanVal()))
             ) {   
-                classes = 'fa-check success icon col-icon icon-sm';
+                classes = 'fa-check success icon icon-sm';
                 $div.removeClass('has-error');
                 $messageBox.empty();
             } 
             else {
-                classes = 'fa-times danger icon col-icon icon-sm';
+                classes = 'fa-times danger icon icon-sm';
                 $div.addClass('has-error');
 
                 if ($input.val().length === 18) {

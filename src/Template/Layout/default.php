@@ -60,7 +60,9 @@
 			        			</a>
 			        		</li>
 			        		<li>
-			        			<a href='#'><i class='fas fa-file-alt'></i> Contratos</a>
+			        			<a href='/Contrato/add'>
+			        				<i class='fas fa-file-alt'></i> Cadastrar Contrato
+			        			</a>
 			        		</li>
 			        	</ul>
 			        	<ul class='nav navbar-nav navbar-right'>
