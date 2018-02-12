@@ -87,23 +87,12 @@
 			return false;
 		}
 
-		/*public function validaCadastro(string $cnpj)
+		public function getCadastro(string $cnpj)
 		{
-			$cadastro = $this->find([
-					'cod_cadastro', 'razao', 'cnpj', 
-					'ativo', 'status', 'cod_reg_trib'
-				])
-				->from(['cadastro', 'contrato'])
-				->where([
-					'cnpj =' => unmask($cnpj), 'and',
-					'cod_cadastro = contratante'
-				])->fetch('class');
-
-			if ($cadastro) {
-				return $cadastro;
-			}
-			return false;	
-		}*/
+			return $this->find(['cod_cadastro', 'cnpj', 'cep', 'razao'])
+				->where(['cnpj =' => unmask($cnpj)])
+				->fetch('class');
+		}
 
 		public function normalizarDados(array $dadosCadastro)
 		{

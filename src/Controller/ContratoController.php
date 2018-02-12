@@ -12,23 +12,28 @@
 
 		public function add($cnpj = null)
 		{
+			$modalidade = TableRegistry::get('Modalidade');
+			$planoConta = TableRegistry::get('PlanoConta');
 			$cadastro = TableRegistry::get('Cadastro');
+			$cadastroEntity = $cadastro->newEntity();
+			$status = TableRegistry::get('Status');
+			$banco = TableRegistry::get('Banco');
 			$usuario = $this->Auth->getUser();
-			$cadastroEncontrado = null;
 
 			if ($this->request->is('GET')) {
 				if (is_numeric($cnpj)) {
-					$cadastroEncontrado = $cadastro->find(['*'])
-						->where([
-							'cnpj =' => unmask($cnpj)
-						])
-						->fetch('class');
+					$cadastroEntity = $cadastro->getCadastro($cnpj);
 				}
 			}
 
 			$this->setViewVars([
+				'analiticos' => $planoConta->getAnaliticosPorCod(0),
+				'modalidades' => $modalidade->getModalidades(),
+				'sinteticos' => $planoConta->getSinteticos(),
+				'status' => $status->getStatus(),
+				'bancos' => $banco->getBancos(),
 				'usuarioNome' => $usuario->nome,
-				'cadastro' => $cadastroEncontrado
+				'cadastro' => $cadastroEntity
 			]);
 		}
 
