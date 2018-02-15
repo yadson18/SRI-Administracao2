@@ -17,13 +17,6 @@
 			$this->setBelongsTo('', []);
 		}
 
-		public function getCaixas()
-		{
-			return $this->find(['caixa', 'online', 'modeloimpressora'])
-				->orderBy(['caixa'])
-				->fetch('all');
-		}
-
 		protected function defaultValidator(Validator $validator)
 		{
 			$validator->addRule('empresa')->notEmpty()->int()->size(4);

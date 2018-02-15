@@ -1,7 +1,7 @@
 <div id='contrato-add' class='col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1'>
 	<?= $this->Form->start('', ['class' => 'form-content col-sm-12']) ?>
 		<div class='form-header text-center'>
-			<h4>Adicionar Contrato</h4>
+			<h4>Cadastrar Contrato</h4>
 		</div>
 		<div class='form-body'>
 			<div class='form-group' id='breadcrumb'>
@@ -34,7 +34,7 @@
 								]) 
 							?>
 					      	<span class='input-group-btn'>
-					        	<button class='btn btn-primary btn-sm' type='button'>
+					        	<button class='btn btn-primary btn-sm' type='button' data-toggle='modal' data-target='#finder'>
 					        		Alterar <i class='fas fa-search'></i>
 					        	</button>
 					      	</span>
@@ -44,7 +44,8 @@
 						<?= $this->Form->input('Razão Social', [
 								'value' => (isset($cadastro->razao)) ? $cadastro->razao : '',
 								'placeholder' => 'EX: FRUTAS E VERDURAS LTDA',
-								'class' => 'form-control input-sm disabled'
+								'class' => 'form-control input-sm disabled',
+								'maxlength' => 60
 							]) 
 						?>
 					</div>
@@ -112,20 +113,17 @@
 							</div>
 						</div>
 						<div class='form-group col-md-3 col-sm-4'>
-							<?= $this->Form->input('N° de Terminais ADM', [
-									'name' => 'num_termi_adm',
-									'placeholder' => 'EX: 2',
-									'type' => 'number',
-									'value' => 0,
-									'min' => 0
+							<?= $this->Form->select('PDV', ['NÃO' => 0, 'SIM' => 1], [
+									'name' => 'hardware'
 								]) 
 							?>
 						</div>
 						<div class='form-group col-md-3 col-sm-4'>
-							<?= $this->Form->input('PDV', [
-									'placeholder' => 'EX: 5',
+							<?= $this->Form->input('N° de Terminais ADM', [
+									'name' => 'num_termi_adm',
+									'placeholder' => 'EX: 2',
 									'type' => 'number',
-									'name' => 'pdv',
+									'max' => 9999,
 									'value' => 0,
 									'min' => 0
 								]) 
@@ -154,15 +152,16 @@
 								        	<th>Ações</th>
 								      	</tr>
 								    </thead>
-								    <tbody class='text-capitalize'>
+								    <tbody class='text-capitalize equipamentos'>
 								    	<?php if (isset($cadastro->cod_cadastro)): ?>
 								    		<tr>
 								    			<th>1</th>
 								    			<td>
 								    				<?= $this->Form->input('', [
 															'class' => 'form-control input-sm disabled',
-															'name' => 'equip_ordem[]',
+															'name' => 'equipamento[0][numero_ecf]',
 															'type' => 'number',
+															'maxlength' => 4,
 															'value' => 0
 														]) 
 													?>
@@ -171,15 +170,17 @@
 								    				<?= $this->Form->input('', [
 															'value' => 'SRI' . $cadastro->cnpj . $cadastro->cep,
 															'class' => 'form-control input-sm disabled',
-															'name' => 'equip_serie[]'
+															'name' => 'equipamento[0][serie_impressora]',
+															'maxlength' => 30
 														]) 
 													?>
 								    			</td>
 								    			<td>
 								    				<?= $this->Form->input('', [
 															'class' => 'form-control input-sm disabled',
-															'name' => 'equip_modelo[]',
-															'value' => 'SRICASH'
+															'name' => 'equipamento[0][modelo_impressora]',
+															'value' => 'SRICASH',
+															'maxlength' => 12
 														]) 
 													?>
 								    			</td>
@@ -203,7 +204,9 @@
 								<?= $this->Form->input('Código do Responsável Financeiro', [
 										'value' => (isset($cadastro->cod_cadastro)) ? $cadastro->cod_cadastro : '',
 										'class' => 'form-control input-sm disabled',
-										'name' => 'cod_resp_financeiro'
+										'name' => 'cod_resp_financeiro',
+										'placeholder' => 'EX: 15',
+										'maxlength' => 5
 									]) 
 								?>
 							</div>
@@ -216,11 +219,12 @@
 									'class' => 'form-control input-sm disabled',
 									'placeholder' => 'EX: 1',
 									'name' => 'cod_vendedor',
+									'maxlength' => 5,
 									'min' => 0
 								]) 
 							?>
 					      	<span class='input-group-btn'>
-					        	<button class='btn btn-primary btn-sm' type='button' id='busca-vendedor'>
+					        	<button class='btn btn-primary btn-sm' type='button' data-toggle='modal' data-target='#vendedores'>
 					        		Alterar <i class='fas fa-search'></i>
 					        	</button>
 					      	</span>
@@ -230,7 +234,8 @@
 						<?= $this->Form->input('Nome do Vendedor', [
 								'class' => 'form-control input-sm disabled',
 								'placeholder' => 'EX: MATHEUS',
-								'name' => 'comissionado_nome'
+								'id' => 'vendedor',
+								'name' => false
 							]) 
 						?>
 					</div>
@@ -316,4 +321,131 @@
 			</div>
 		</div>
 	<?= $this->Form->end() ?>
+	<!-- Modal Listar Clientes -->
+        <div class='modal fade' id='finder' tabindex='-1' role='dialog'>
+			<div class='modal-dialog modal-lg' role='document'>
+				<div class='modal-content'>
+					<div class='modal-header'>
+						<button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+							<span aria-hidden='true'>&times;</span>
+						</button>
+						<h4 class='modal-title text-center'>Consultar Cadastros</h4>
+					</div>
+					<div class='modal-body'>
+						<div class='message-box'></div>
+						<div class='row'>
+							<div class='col-sm-6 form-group'>
+		  						<div class='input-group icon-right'>
+		  							<span class='input-group-btn'>
+		      							<select class='btn btn-default btn-sm filter'>
+				      						<option value='1'>CÓDIGO</option>
+				      						<option value='2'>CNPJ/CPF</option>
+				      						<option value='3'>RAZÃO SOCIAL</option>
+				      						<option value='4'>CEP</option>
+		      							</select>
+		  							</span>
+				      				<?= $this->Form->input('', [
+				                           	'class' => 'form-control input-sm search-content text-uppercase',
+				                           	'placeholder' => 'Digite sua busca aqui',
+				                           	'required' => false,
+				                           	'name' => false,
+				                           	'id' => false
+				                       	]) 
+				                    ?>
+		                			<i class='fas fa-search icon icon-sm button find'></i>
+		  						</div>
+							</div>
+							<div class='col-sm-12'>
+								<div class='table-responsive fixed-height'>
+									<table class='table table-bordered'>
+										<thead>
+											<tr>
+									      		<th>#</th>
+									        	<th>Código</th>
+									        	<th>CNPJ/CPF</th>
+									        	<th>Razão Social</th>
+									        	<th>CEP</th>
+									        	<th>Selecionado</th>
+									      	</tr>
+										</thead>
+										<tbody class='text-capitalize'></tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class='modal-footer'>
+						<button type='button' class='btn btn-danger' data-dismiss='modal'>
+							Fechar <i class='fas fa-times'></i>
+						</button>
+			 			<button type='button' class='btn btn-success inserir'>
+			 				Concluir <i class='fas fa-check'></i>
+			 			</button>
+					</div>
+					<div class='text-center loading hidden'> 
+						<div class='loading-content change-loading-height'>
+							<i class='fas fa-circle-notch fa-spin fa-3x'></i>
+			                <h5>Carregando os dados...</h5>
+						</div>
+		            </div>
+				</div>
+			</div>
+		</div>
+    <!-- Modal End -->
+    <!-- Modal Listar Vendedores -->
+        <div class='modal fade' id='vendedores' tabindex='-1' role='dialog'>
+			<div class='modal-dialog modal-lg' role='document'>
+				<div class='modal-content'>
+					<div class='modal-header'>
+						<button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+							<span aria-hidden='true'>&times;</span>
+						</button>
+						<h4 class='modal-title text-center'>Vendedores</h4>
+					</div>
+					<div class='modal-body'>
+						<div class='message-box'></div>
+						<div class='table-responsive fixed-height'>
+							<table class='table table-bordered'>
+								<thead>
+									<tr>
+									    <th>#</th>
+									    <th>Código</th>
+									    <th>CPF</th>
+									    <th>Nome</th>
+									    <th>Selecionado</th>
+									</tr>
+								</thead>
+								<?php if (!empty($vendedores)): ?>
+									<tbody class='text-capitalize'>
+										<?php foreach ($vendedores as $indice => $vendedor): ?>
+											<tr>
+								    			<th><?= ++$indice ?></th>
+									        	<td class='id'><?= $vendedor['id'] ?></td>
+									        	<td class='cpfMask'><?= unmask($vendedor['cpf']) ?></td>
+									        	<td class='nome'><?= $vendedor['nome'] ?></td>
+									        	<td><input class='check-unic' type='checkbox'></td>
+									        </tr>
+										<?php endforeach ?>
+									</tbody>
+								<?php endif ?>
+							</table>
+							<?php if(empty($vendedores)): ?>
+								<div class='text-center data-not-found'>
+									<h4>Nada a ser exibido. <i class='far fa-frown'></i></h4>
+								</div>		    	
+							<?php endif; ?>
+						</div>
+					</div>
+					<div class='modal-footer'>
+						<button type='button' class='btn btn-danger' data-dismiss='modal'>
+							Fechar <i class='fas fa-times'></i>
+						</button>
+			 			<button type='button' class='btn btn-success inserir'>
+			 				Concluir <i class='fas fa-check'></i>
+			 			</button>
+					</div>
+				</div>
+			</div>
+		</div>
+    <!-- Modal End -->
 </div>

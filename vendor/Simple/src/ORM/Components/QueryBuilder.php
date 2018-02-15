@@ -247,6 +247,7 @@
 		public function fetch(string $fetchType = null)
 		{
 			$validator = $this->defaultValidator(new Validator());
+
 			$queryType = $this->getQueryType();
 			$query = $this->queryToString();
 			$values = $this->getQueryValues();
@@ -254,7 +255,7 @@
 
 			$statement = new Statement($this->getConnection());
 			$statement->compileQuery($queryType, $query, $values, $validator);
-
+			
 			switch ($queryType) {
 				case 'select':
 					switch ($fetchType) {

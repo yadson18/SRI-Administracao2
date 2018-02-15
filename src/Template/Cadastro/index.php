@@ -2,8 +2,35 @@
 	<h2 class='page-header'>
 		Clientes 
 		<a href='/Cadastro/add' class='btn btn-success'>
-			Adicionar Novo <i class="fas fa-plus-circle"></i>
+			Adicionar Novo <i class='fas fa-plus-circle'></i>
 		</a>
+		<ul class='list-inline pull-right legends'>
+			<li class='form-group'><strong>Legendas:</strong></li>
+			<li>
+				<button class='btn btn-success btn-xs'>
+					<i class='fas fa-plus'></i>
+				</button>
+				Adicionar <strong>/</strong>
+			</li> 
+			<li>
+				<button class='btn btn-info btn-xs'>
+					<i class='fas fa-eye'></i>
+				</button>
+				Visualizar <strong>/</strong>
+			</li> 
+			<li>
+				<button class='btn btn-primary btn-xs'>
+					<i class='fas fa-pencil-alt'></i>
+				</button>
+				Editar <strong>/</strong>
+			</li> 
+			<li>
+				<button class='btn btn-danger btn-xs'>
+					<i class='fas fa-trash-alt'></i>
+				</button>
+				Deletar
+			</li>
+		</ul>
 	</h2>
 	<div class='container-fluid cadastro-lista'>
 		<div class='message-box'></div>
@@ -14,7 +41,7 @@
 			      		<th>#</th>
 			        	<th>Código</th>
 			        	<th>CNPJ/CPF</th>
-			        	<th>Razão</th>
+			        	<th>Razão Social</th>
 			        	<th>Fantasia</th>
 			        	<th>Estado</th>
 			        	<th>CEP</th>
@@ -27,9 +54,9 @@
 			    </thead>
 			    <?php if(!empty($cadastros)): ?>
 				    <tbody class='text-capitalize'>
-				    		<?php foreach($cadastros as $index => $cadastro): ?>
+				    		<?php foreach($cadastros as $indice => $cadastro): ?>
 					    		<tr id=<?= $cadastro['cod_cadastro'] ?>>
-					    			<th><?= ($index + 1) ?></th>
+					    			<th><?= $indiceAtual + (++$indice) ?></th>
 						        	<td><?= $cadastro['cod_cadastro'] ?></td>
 									<td class='cnpjCpfMask'><?= unmask($cadastro['cnpj']) ?></td>
 									<td><?= mb_strtolower($cadastro['razao']) ?></td>
@@ -41,11 +68,16 @@
 									<td><?= mb_strtolower($cadastro['bairro']) ?></td>
 									<td>
 										<span class='badge'><?= $cadastro['contratos'] ?></span>
-										<?php if ($cadastro['contratos'] > 0): ?>
-											<button value=<?= $cadastro['cod_cadastro'] ?> class='btn btn-info btn-xs btn-block' data-toggle='modal' data-target='#contracts'>
-												Visualizar <i class='fas fa-eye'></i>
-											</button>
-										<?php endif ?>
+										<div>
+											<?php if ($cadastro['contratos'] > 0): ?>
+												<button value=<?= $cadastro['cod_cadastro'] ?> class='btn btn-info btn-xs' data-toggle='modal' data-target='#contracts'>
+													<i class='fas fa-eye'></i>
+												</button>
+											<?php endif ?>
+											<a href=/Contrato/add/<?= $cadastro['cnpj'] ?> class='btn btn-success btn-xs'>
+												<i class='fas fa-plus'></i>
+											</a>
+										</div>
 									</td>
 									<td class='actions'>
 										<a href=/Cadastro/edit/<?= $cadastro['cod_cadastro'] ?> class='btn btn-primary btn-xs'>

@@ -194,35 +194,31 @@ $(document).ready(function(){
             }
         })
         .always(function(dados, status) {
-            $DOM.carregando.addClass('hidden');
+            $DOM.tabela.empty();
 
             if (status === 'success') {
                 if (dados.status === 'success') {
-                    var $linhaAtual = null;
-                    var $linhas = [];
+                    var $linhasTabela = [];
 
-                    for (var indice in dados.data) {
-                        $linhaAtual = dados.data[indice];
-
-                        $linhas.push($('<tr></tr>', {
+                    $.each(dados.data, function(indice, valor) {
+                        $linhasTabela.push($('<tr></tr>', {
                             html: [
                                 $('<th></th>', { html: (++indice) }),
-                                $('<td></td>', { html: $linhaAtual.seq }),
-                                $('<td></td>', { html: dataFormatoBr($linhaAtual.vencimento) }),
-                                $('<td></td>', { html: dataFormatoBr($linhaAtual.ativacao) }),
-                                $('<td></td>', { html: dataFormatoBr($linhaAtual.ultima_cobranca) }),
-                                $('<td></td>', { html: $linhaAtual.valor}).mask(
+                                $('<td></td>', { html: valor.seq }),
+                                $('<td></td>', { html: dataFormatoBr(valor.vencimento) }),
+                                $('<td></td>', { html: dataFormatoBr(valor.ativacao) }),
+                                $('<td></td>', { html: dataFormatoBr(valor.ultima_cobranca) }),
+                                $('<td></td>', { html: valor.valor}).mask(
                                     '000.000.000,0', { reverse: true }
                                 ),
-                                $('<td></td>', { html: $linhaAtual.modalidade.toLowerCase() }),
-                                $('<td></td>', { html: ($linhaAtual.nfe == 1) ? 'Sim' : 'Não' }),
-                                $('<td></td>', { html: $linhaAtual.termi_adm }),
-                                $('<td></td>', { html: $linhaAtual.status.toLowerCase() })
+                                $('<td></td>', { html: valor.modalidade }),
+                                $('<td></td>', { html: (valor.nfe == 1) ? 'Sim' : 'Não' }),
+                                $('<td></td>', { html: valor.termi_adm }),
+                                $('<td></td>', { html: valor.status })
                             ]
                         }));
-                    }
-
-                    $DOM.tabela.append($linhas);
+                    });
+                    $DOM.tabela.append($linhasTabela);
                 }
                 else {
                     $DOM.mensagem.bootstrapAlert(dados.status, dados.message);
@@ -233,6 +229,7 @@ $(document).ready(function(){
                     'warning', 'Não foi possível completar a operação, verifique sua conexão com a internet.'
                 );
             }
+            $DOM.carregando.addClass('hidden');
         });
     });
 

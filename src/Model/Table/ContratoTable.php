@@ -49,44 +49,40 @@
 				->fetch('all');
 		}
 
-		/*public function listarAtivos()
+		public function getSequencia(int $contratante)
 		{
-			return $this->find([])
-				->sum('case when data_inclusao = '. $dataDeHoje .' then 1 else 0 end')->as('hoje')
-				->count('contratante')->as('total')
-				->where(['status !=' => 8])
+			return $this->find(['seq'])
+				->where(['contratante =' => $contratante])
+				->orderBy(['seq desc'])
 				->fetch('class');
-		}*/
+		}
 
-		/*public function listarAtivos(int $quantity = null, int $skipTo = null)
+		public function normalizarDados(array $dadosContrato)
 		{
-			$cadastros = $this->find([
-				'valor_contrato', 'data_inclusao', 'data_ativacao', 'data_vencimento',
-				'modalidade', 
-			]);
+			foreach ($dadosContrato as $coluna => $valor) {
+				if ($coluna === 'data_inclusao' || $coluna === 'data_ativacao' ||
+					$coluna === 'data_vencimento' || $coluna === 'data_ultima_cobranca'
+				) {
+					$dadosContrato[$coluna] = str_replace('/', '.', $valor);
+				}
+				else if ($coluna === 'valor_comissao' || $coluna === 'valor_contrato') {
+					$dadosContrato[$coluna] = dinheiroParaFloat($valor);
+				}
+			}
 
-			if (!empty($quantity)) {
-				$cadastros->limit($quantity);
-			}
-			if (!empty($skipTo)) {
-				$cadastros->skip($skipTo);
-			}
-				
-			return $cadastros->orderBy(['razao'])
-				->where(['ativo =' => 'T'])
-				->fetch('all');
-		}*/
+			return array_map('removeSpecialChars', $dadosContrato);
+		}
 
 		protected function defaultValidator(Validator $validator)
 		{
 			$validator->addRule('seq')->notEmpty()->int()->size(4);
-			$validator->addRule('data_vencimento')->empty()->string()->size(4);
-			$validator->addRule('contratante')->empty()->int()->size(4);
-			$validator->addRule('data_inclusao')->empty()->string()->size(4);
-			$validator->addRule('data_ativacao')->empty()->string()->size(4);
-			$validator->addRule('valor_contrato')->empty()->int()->size(2);
-			$validator->addRule('data_ultima_cobranca')->empty()->string()->size(4);
-			$validator->addRule('data_ultima_renovacao')->empty()->string()->size(4);
+			$validator->addRule('data_vencimento')->empty()->string()->size(10);
+			$validator->addRule('contratante')->empty()->int()->size(5);
+			$validator->addRule('data_inclusao')->empty()->string()->size(10);
+			$validator->addRule('data_ativacao')->empty()->string()->size(10);
+			$validator->addRule('valor_contrato')->empty()->float()->size(6);
+			$validator->addRule('data_ultima_cobranca')->empty()->string()->size(10);
+			$validator->addRule('data_ultima_renovacao')->empty()->string()->size(10);
 			$validator->addRule('obs')->empty()->string()->size(100);
 			$validator->addRule('modalidade')->empty()->int()->size(4);
 			$validator->addRule('razao_social')->empty()->string()->size(60);
@@ -94,18 +90,18 @@
 			$validator->addRule('dia_vencimento')->empty()->string()->size(2);
 			$validator->addRule('status')->empty()->int()->size(2);
 			$validator->addRule('seq_banco')->notEmpty()->int()->size(4);
-			$validator->addRule('master')->notEmpty()->int()->size(4);
+			$validator->addRule('master')->empty()->int()->size(4);
 			$validator->addRule('analitico')->notEmpty()->int()->size(4);
 			$validator->addRule('sintetico')->notEmpty()->int()->size(4);
-			$validator->addRule('cod_resp_financeiro')->notEmpty()->int()->size(4);
-			$validator->addRule('valor_comissao')->empty()->int()->size(2);
+			$validator->addRule('cod_resp_financeiro')->notEmpty()->int()->size(5);
+			$validator->addRule('valor_comissao')->empty()->float()->size(5);
 			$validator->addRule('sintegra')->empty()->string()->size(1);
 			$validator->addRule('efd')->empty()->string()->size(1);
 			$validator->addRule('nota_fiscal_eletronica')->empty()->string()->size(1);
 			$validator->addRule('num_termi_adm')->empty()->int()->size(4);
 			$validator->addRule('hardware')->empty()->string()->size(1);
-			$validator->addRule('cod_vendedor')->empty()->int()->size(4);
-			$validator->addRule('data_cancelamento')->empty()->string()->size(4);
+			$validator->addRule('cod_vendedor')->empty()->int()->size(5);
+			$validator->addRule('data_cancelamento')->empty()->string()->size(10);
 			$validator->addRule('cancelado')->empty()->string()->size(1);
 			$validator->addRule('tipo_envio')->empty()->int()->size(2);
 

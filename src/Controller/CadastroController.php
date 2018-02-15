@@ -37,6 +37,7 @@
 			
 			$this->setTitle('Clientes Cadastrados');
 			$this->setViewVars([
+				'indiceAtual' => $this->Paginator->getStartPosition(),
 				'usuarioNome' => $usuario->nome,
 				'cadastros' => $cadastros
 			]);
@@ -208,8 +209,43 @@
 			}
 		}
 
+		public function buscaCadastro()
+		{
+			if ($this->request->is('POST')) {
+				$dados = array_map('removeSpecialChars', $this->request->getData());
+
+				if (!empty($dados['filtro']) && is_numeric($dados['busca']) && 
+					$dados['busca'] >= 0 || !empty($dados['busca'])
+				) {
+					$cadastros = $this->Cadastro->buscaCadastro($dados['filtro'], $dados['busca']);
+
+					if (!empty($cadastros)) {
+						$this->Ajax->response('cadastros', [
+							'status' => 'success',
+							'data' => $cadastros
+						]);
+					}
+					else {
+						$this->Ajax->response('cadastros', [
+							'status' => 'error',
+							'message' => 'Desculpe, nada foi encontrado.'
+						]);
+					}
+				}
+				else {
+					$this->Ajax->response('cadastros', [
+						'status' => 'error',
+						'message' => 'Por favor, verifique se os dados foram digitados corretamente.'
+					]);
+				}
+			}
+			else {
+				return $this->redirect('default');
+			}	
+		}
+
 		public function beforeFilter()
 		{
-			$this->Auth->isAuthorized(['index', 'edit', 'add', 'delete']);
+			$this->Auth->isAuthorized(['index', 'edit', 'add', 'delete', 'buscaCadastro']);
 		}
 	}

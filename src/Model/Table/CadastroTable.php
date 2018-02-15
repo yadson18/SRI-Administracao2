@@ -18,6 +18,40 @@
 			$this->setBelongsTo('', []);
 		}
 
+		public function buscaCadastro(int $filtro, $valor)
+		{
+			$filtroNome = null;
+
+			switch ($filtro) {
+				case 1: $filtroNome = 'cod_cadastro'; break;
+				case 2: $filtroNome = 'cnpj'; break;
+				case 3: $filtroNome = 'razao'; break;
+				case 4: $filtroNome = 'cep'; break;
+			}
+
+			if (!empty($filtroNome)) {
+				return $this->find([
+						'ca.cod_cadastro', 'ca.cnpj', 'ca.razao', 'ca.fantasia', 
+						'ca.estado', 'ca.cidade', 'ca.cep', 'ca.endereco', 'ca.bairro'
+					])
+					->count('co.seq')->as('contratos')
+					->from(['cadastro ca'])
+					->join(['left join contrato co on(co.contratante = ca.cod_cadastro)'])
+					->groupBy([
+						'ca.cod_cadastro', 'ca.cnpj', 'ca.razao', 'ca.fantasia', 
+						'ca.estado', 'ca.cidade', 'ca.cep', 'ca.endereco', 'ca.bairro'
+					])
+					->where([
+						'ca.' . $filtroNome . ' like ' => $valor.'%', 'and',
+						'ca.ativo =' => 'T'
+					])
+					->orderBy([$filtroNome])
+					->limit(60)
+					->fetch('all');
+			}
+			return false;
+		}
+
 		public function criarJson(string $cnpj)
 		{
 			$cadastro = $this->find([
