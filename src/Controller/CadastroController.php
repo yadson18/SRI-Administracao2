@@ -52,6 +52,7 @@
 		public function add()
 		{
 			$cadastro = $this->Cadastro->newEntity();
+			$pais = TableRegistry::get('Codigopais');
 			$ibge = TableRegistry::get('Ibge');
 			$usuario = $this->Auth->getUser();
 
@@ -117,13 +118,15 @@
 			$this->setViewVars([
 				'municipios' => $ibge->municipiosUF('AC'),
 				'estados' => $ibge->siglaEstados(),
-				'usuarioNome' => $usuario->nome
+				'usuarioNome' => $usuario->nome,
+				'paises' => $pais->get('all')
 			]);
 		}
 
 		public function edit($cod_cadastro = null)
 		{
 			$cadastro = $this->Cadastro->newEntity();
+			$pais = TableRegistry::get('Codigopais');
 			$ibge = TableRegistry::get('Ibge');
 			$usuario = $this->Auth->getUser();
 
@@ -157,6 +160,7 @@
 					'municipios' => $ibge->municipiosUF($cadastro->estado),
 					'estados' => $ibge->siglaEstados(),
 					'usuarioNome' => $usuario->nome,
+					'paises' => $pais->get('all'),
 					'cadastro' => $cadastro
 				]);
 			}

@@ -28,28 +28,28 @@
 		<?= $this->Html->script('less.min.js') ?>
 	</head>
 	<body>	
-		<nav class='navbar navbar-inverse' id='main-nav'>
+		<nav class='navbar navbar-inverse' id='main-nav'> 
 		    <div class='container-fluid'>
-		        <div class='navbar-header'>
-		            <button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#responsive-menu' aria-expanded='false'>
-		                <span class='sr-only'>Toggle navigation</span>
-		                <span class='icon-bar'></span>
-		                <span class='icon-bar'></span>
-		                <span class='icon-bar'></span>
-		            </button>
-		        </div>
+	        	<?php 
+	            	if ($this->fetch('view') !== 'login'): 
+	            ?>
+			        <div class='navbar-header'>
+				        <button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#responsive-menu' aria-expanded='false'>
+				            <span class='sr-only'>Toggle navigation</span>
+				            <span class='icon-bar'></span>
+				            <span class='icon-bar'></span>
+				            <span class='icon-bar'></span>
+				        </button>
+			        </div>
+			    <?php else: ?>
+			    	<ul class='nav navbar-nav pull-left brand'>
+			            <li><a href='#'>SRI</a></li>
+			        </ul>
+			    <?php endif ?>
 		        <div class='collapse navbar-collapse' id='responsive-menu'>
 		        	<?php 
-		            	if ($this->fetch('controller') === 'Colaborador' &&
-		            		$this->fetch('view') === 'login'
-		            	): 
+		            	if ($this->fetch('view') !== 'login'): 
 		            ?>
-		            	<ul class='nav navbar-nav'>
-		            		<li>
-		            			<a href='#'>SRI</i></a>
-		            		</li>
-		            	</ul>
-		        	<?php else: ?>
 			        	<ul class='nav navbar-nav'>
 			        		<li>
 			        			<a href='/Page/home'><i class='fas fa-home'></i> Início</a>

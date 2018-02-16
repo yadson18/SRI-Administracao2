@@ -52,7 +52,12 @@
 													]) 
 												?>	
 											</div>
-										<?php endif ?>
+											<div class='col-sm-2 col-xs-2 group group-button hidden'>
+												<button id='find-cnpj' class='btn btn-primary btn-sm btn-block' type='button'>
+													<i class='fas fa-search'></i>
+												</button>
+											</div>
+										<?php endif; ?>	
 									</div>
 								</div>
 							</div>
@@ -97,7 +102,16 @@
 							]) 
 						?>
 					</div>
-					<div class='form-group col-sm-4 icon-right'>
+					<div class='form-group col-md-3 col-sm-4'>
+						<?= $this->Form->select('País', array_column(
+								$paises, 'cpais', 'xpais'
+							), [
+								'selected' => $cadastro->cpais,
+								'name' => 'cpais'
+							]) 
+						?>
+					</div>
+					<div class='form-group col-md-3 col-sm-5 icon-right'>
 						<?= $this->Form->input('CEP', [
 								'class' => 'form-control input-sm cepMask',
 								'placeholder' => 'EX: 50000-000',
@@ -106,7 +120,7 @@
 						?>
 						<i class='fas fa-search icon col-icon icon-sm button' id='find-cep'></i>	
 					</div>
-					<div class='form-group col-sm-3'>
+					<div class='form-group col-md-2 col-sm-3'>
 						<?= $this->Form->select('Estado', array_column(
 								$estados, 'sigla', 'sigla'
 							), [
@@ -114,7 +128,7 @@
 							]) 
 						?>
 					</div>
-					<div class='form-group col-sm-5'>	
+					<div class='form-group col-md-4 col-sm-5'>	
 						<?= $this->Form->select('Cidade', array_column(
 								$municipios, 'nome_municipio', 'nome_municipio'
 							), [
@@ -122,15 +136,7 @@
 							]) 
 						?>
 					</div>
-					<div class='form-group col-md-5 col-sm-6'>	
-						<?= $this->Form->input('Bairro', [
-								'placeholder' => 'EX: CENTRO',
-								'value' => $cadastro->bairro,
-								'maxlength' => 30
-							]) 
-						?>
-					</div>
-					<div class='form-group col-md-5 col-sm-6'>	
+					<div class='form-group col-md-5 col-sm-7'>	
 						<?= $this->Form->input('Endereço', [
 								'placeholder' => 'EX: RUA CARLOS AFONSO',
 								'value' => $cadastro->endereco,
@@ -147,7 +153,15 @@
 							]) 
 						?> 
 					</div>
-					<div class='form-group col-md-5 col-sm-8'>	 
+					<div class='form-group col-md-5 col-sm-8'>	
+						<?= $this->Form->input('Bairro', [
+								'placeholder' => 'EX: CENTRO',
+								'value' => $cadastro->bairro,
+								'maxlength' => 30
+							]) 
+						?>
+					</div>
+					<div class='form-group col-md-5 col-sm-6'>	 
 						<?= $this->Form->input('Complemento', [
 								'placeholder' => 'EX: EMPRESARIAL ABC, 22',
 								'value' => $cadastro->complementar,
@@ -156,7 +170,7 @@
 							]) 
 						?>
 					</div>
-					<div class='form-group col-sm-7'>	
+					<div class='form-group col-md-7 col-sm-6'>	
 						<?= $this->Form->select('Código de Regime Tributário', [
 								'SIMPLES NACIONAL - EXCESSO DE SUBLIMITE DA RECEITA BRUTA' => 2,
 								'SIMPLES NACIONAL' => 1,
