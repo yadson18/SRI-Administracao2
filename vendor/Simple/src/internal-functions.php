@@ -101,7 +101,18 @@
 		return removeSpecialChars(unmask($data));
 	}
 
-	function removeSpecialChars(string $value) 
+	function rmSpecialCharRecursive($data)
+	{
+		foreach ($data as $column => $value) {
+			if (is_array($value)) {
+				debug($value);
+				return rmSpecialCharRecursive($value);
+			}
+			return removeSpecialChars($value);
+		}
+	}
+
+	function removeSpecialChars($value) 
 	{
 		$invalid = [
 			'a' => ['á','à','â','ã','ä'],
@@ -116,11 +127,14 @@
 	    	]
 		];
 
-		foreach ($invalid as $replaceTo => $invalidValues) {
-			$value = str_replace($invalidValues, $replaceTo, $value);
-			$value = str_replace(
-				array_map('mb_strtoupper', $invalidValues), strtoupper($replaceTo), $value
-			);
+		if (!is_array($value)) {
+			foreach ($invalid as $replaceTo => $invalidValues) {
+				$value = str_replace($invalidValues, $replaceTo, $value);
+				$value = str_replace(
+					array_map('mb_strtoupper', $invalidValues), mb_strtoupper($replaceTo), $value
+				);
+			}
+			return $value;
 		}
-		return $value;
+		return array_map('removeSpecialChars', $value);
 	}

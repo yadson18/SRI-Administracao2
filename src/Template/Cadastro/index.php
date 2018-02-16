@@ -4,7 +4,7 @@
 		<a href='/Cadastro/add' class='btn btn-success'>
 			Adicionar Novo <i class='fas fa-plus-circle'></i>
 		</a>
-		<ul class='list-inline pull-right legends'>
+		<ul class='list-inline pull-right legends text-center'>
 			<li class='form-group'><strong>Legendas:</strong></li>
 			<li>
 				<button class='btn btn-success btn-xs'>
@@ -34,6 +34,27 @@
 	</h2>
 	<div class='container-fluid cadastro-lista'>
 		<div class='message-box'></div>
+		<div class='row' id='finder'>
+			<div class='col-sm-6 form-group'>
+				<div class='input-group icon-right'>
+					<span class='input-group-btn'>
+						<select class='btn btn-default btn-sm filter'>
+	  						<option value='1'>CÓDIGO</option>
+	  						<option value='2'>CNPJ/CPF</option>
+	  						<option value='3'>RAZÃO SOCIAL</option>
+	  						<option value='4'>CEP</option>
+	  						<option value='5'>ESTADO</option>
+	  						<option value='6'>FANTASIA</option>
+	  						<option value='7'>CIDADE</option>
+	  						<option value='8'>ENDEREÇO</option>
+	  						<option value='9'>BAIRRO</option>
+						</select>
+					</span>
+					<input class='form-control input-sm search text-uppercase' placeholder='Digite sua busca aqui'/>
+					<button class='btn btn-sm button fas fa-search icon icon-sm find'></button>
+				</div>
+			</div>
+		</div>
 		<div class='table-responsive fixed-height'>
 			<table class='table table-bordered'>
 			    <thead>
@@ -56,7 +77,7 @@
 				    <tbody class='text-capitalize'>
 				    		<?php foreach($cadastros as $indice => $cadastro): ?>
 					    		<tr id=<?= $cadastro['cod_cadastro'] ?>>
-					    			<th><?= $indiceAtual + (++$indice) ?></th>
+					    			<th><?= ++$indice ?></th>
 						        	<td><?= $cadastro['cod_cadastro'] ?></td>
 									<td class='cnpjCpfMask'><?= unmask($cadastro['cnpj']) ?></td>
 									<td><?= mb_strtolower($cadastro['razao']) ?></td>

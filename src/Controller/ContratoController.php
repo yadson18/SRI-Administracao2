@@ -22,6 +22,7 @@
 			$status = TableRegistry::get('Status');
 			$banco = TableRegistry::get('Banco');
 			$usuario = $this->Auth->getUser();
+			$equipamentos = null;
 
 			if ($this->request->is('GET')) {
 				if (is_numeric($cnpj)) {
@@ -29,18 +30,19 @@
 				}
 			}
 			else if ($this->request->is('POST')) {
-				$dados = $this->request->getData();
-				$equipamentos = $dados['equipamento'];
-				unset($dados['equipamento']);
-				$dados = $this->Contrato->normalizarDados($dados);
+				$dados = $this->Contrato->normalizarDados($this->request->getData());
+				if (isset($dados['equipamento'])) {
+					$equipamentos = $dados['equipamento'];
+					unset($dados['equipamento']);
+				}
 				$contrato = $this->Contrato->patchEntity($contrato, $dados);
 				$contrato->cancelado = 'F';
-
+				
 				if ($this->Contrato->save($contrato)) {
 					$seqContrato = $this->Contrato->getSequencia($contrato->contratante);
 					$equipamentosSalvos = 0;
 
-					if (is_numeric($seqContrato->seq)) {
+					if (isset($seqContrato->seq) && is_numeric($seqContrato->seq)) {
 						foreach ($equipamentos as $equipamento) {
 							$equipamento = $contratoSerie->patchEntity($contratoSerie->newEntity(), $equipamento);
 							$equipamento->seq_contrato = $seqContrato->seq;
@@ -51,13 +53,13 @@
 								$equipamentosSalvos++;
 							}
 						}
+					}
 
-						if (sizeof($equipamentos) === $equipamentosSalvos) {
-							$this->Flash->success('O contrato do cliente (' . $contrato->razao_social . ') foi salvo com sucesso.');
-						}
-						else {
-							$this->Flash->warning('O contrato do cliente (' . $contrato->razao_social . ') foi salvo com sucesso, mas não foi possível cadastrar todos os equipamentos.');
-						}
+					if (sizeof($equipamentos) === $equipamentosSalvos) {
+						$this->Flash->success('O contrato do cliente (' . $contrato->razao_social . ') foi salvo com sucesso.');
+					}
+					else {
+						$this->Flash->warning('O contrato do cliente (' . $contrato->razao_social . ') foi salvo com sucesso, mas não foi possível cadastrar todos os equipamentos.');
 					}
 				}
 				else {
@@ -71,8 +73,8 @@
 				'sinteticos' => $planoConta->getSinteticos(),
 				'vendedores' => $vendedor->listaVendedores(),
 				'status' => $status->getStatus(),
-				'bancos' => $banco->getBancos(),
 				'usuarioNome' => $usuario->nome,
+				'bancos' => $banco->getBancos(),
 				'cadastro' => $cadastroEntity
 			]);
 		}

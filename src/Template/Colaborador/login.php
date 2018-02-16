@@ -11,6 +11,7 @@
                 <?= $this->Form->input('', [
                         'placeholder' => 'Digite seu usuário',
                         'class' => 'form-control',
+                        'autofocus' => true,
                         'name' => 'login',
                         'id' => false
                     ]) 

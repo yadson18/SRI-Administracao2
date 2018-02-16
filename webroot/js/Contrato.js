@@ -104,7 +104,7 @@ $(document).ready(function(){
     				$('<td></td>', {
     					html: $('<input/>', { 
     						class: 'form-control input-sm disabled',
-    						name: 'equipamento[0][ordem]',
+    						name: 'equipamento[0][numero_ecf]',
                             maxlength: 4,
     						value: 0
     					})
@@ -112,7 +112,7 @@ $(document).ready(function(){
     				$('<td></td>', {
     					html: $('<input/>', { 
     						class: 'form-control input-sm disabled',
-    						name: 'equipamento[0][serie]',
+    						name: 'equipamento[0][serie_impressora]',
                             value: 'SRI' + cnpj + cep,
                             maxlength: 30
     					})
@@ -120,7 +120,7 @@ $(document).ready(function(){
     				$('<td></td>', {
     					html: $('<input/>', { 
     						class: 'form-control input-sm disabled',
-    						name: 'equipamento[0][modelo]',
+    						name: 'equipamento[0][modelo_impressora]',
                             value: 'SRICASH',
                             maxlength: 12
     					})

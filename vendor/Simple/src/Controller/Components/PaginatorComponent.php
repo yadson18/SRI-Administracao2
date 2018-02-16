@@ -42,7 +42,7 @@
 		}
 
 		public function display()
-		{
+		{	
 			if ($this->getCurrentPage() <= $this->getTotalPages()) {
 				return $this->text() . $this->buttons();
 			}

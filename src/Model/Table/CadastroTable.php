@@ -27,6 +27,11 @@
 				case 2: $filtroNome = 'cnpj'; break;
 				case 3: $filtroNome = 'razao'; break;
 				case 4: $filtroNome = 'cep'; break;
+				case 5: $filtroNome = 'estado'; break;
+				case 6: $filtroNome = 'fantasia'; break;
+				case 7: $filtroNome = 'cidade'; break;
+				case 8: $filtroNome = 'endereco'; break;
+				case 9: $filtroNome = 'bairro'; break;
 			}
 
 			if (!empty($filtroNome)) {

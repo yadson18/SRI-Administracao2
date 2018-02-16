@@ -10,34 +10,40 @@
 			return $this->allow([]);
 		}
 
-		public function index($identificador = null, $pagina = 1)
+		public function index($identificador = null, $valor = 1, $busca = null)
 		{	
-			$pagina = (is_numeric($pagina) && $pagina > 0) ? $pagina : 1;
+			$valor = (is_numeric($valor) && $valor > 0) ? $valor : 1;
 			$usuario = $this->Auth->getUser();
 			$cadastros = null;
-
-			$this->Paginator->showPage($pagina)
+			$paginator = $this->Paginator->showPage($valor)
 				->buttonsLink('/Cadastro/index/pagina/')
-				->itensTotalQuantity(
-					$this->Cadastro->contarAtivos()->quantidade
-				)
 				->limit(100);
+			$quantidadeListada = $paginator->getListQuantity();
+			$inicioDaLista = $paginator->getStartPosition();
+			$total = $this->Cadastro->contarAtivos()->quantidade;
 
 			if ($identificador === 'pagina') {
-				$cadastros = $this->Cadastro->listarAtivos(
-					$this->Paginator->getListQuantity(), 
-					$this->Paginator->getStartPosition()
-				);
+				$cadastros = $this->Cadastro->listarAtivos($quantidadeListada, $inicioDaLista);
+				$paginator->itensTotalQuantity($total);
+			}
+			else if ($identificador === 'busca') {
+				$valor = removeSpecialChars($valor);
+				$busca = removeSpecialChars(urldecode(base64_decode($busca)));
+
+				if (!empty($valor) && is_numeric($valor) && 
+					$busca >= 0 || !empty($busca)
+				) {
+					$cadastros = $this->Cadastro->buscaCadastro($valor, $busca);
+					$paginator->itensTotalQuantity(sizeof($cadastros));
+				}
 			}
 			else {
-				$cadastros = $this->Cadastro->listarAtivos(
-					$this->Paginator->getListQuantity()
-				);
+				$cadastros = $this->Cadastro->listarAtivos($quantidadeListada);
+				$paginator->itensTotalQuantity($total);
 			}
 			
 			$this->setTitle('Clientes Cadastrados');
 			$this->setViewVars([
-				'indiceAtual' => $this->Paginator->getStartPosition(),
 				'usuarioNome' => $usuario->nome,
 				'cadastros' => $cadastros
 			]);

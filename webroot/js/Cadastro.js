@@ -276,6 +276,32 @@ $(document).ready(function(){
         $(this).find('button.confirm').off('click');
     });
 
+    function buscarCadastros(evento)
+    {
+        var $DOM = {
+            filtro: $('#finder .filter'),
+            mensagem: $('.message-box'),
+            busca: $('#finder .search')
+        };
+
+        if (evento.type === 'keypress' && evento.keyCode === 13 || 
+            evento.type === 'click' && evento.keyCode === undefined
+        ) {
+            var busca = $DOM.busca.val().replace(/[ ]/g, '');
+            var filtro = $DOM.filtro.val();
+
+            if (filtro && busca !== '') {
+                window.location.assign('/Cadastro/index/busca/' + filtro + '/' + window.btoa(busca));
+            }
+            else {
+                $DOM.mensagem.bootstrapAlert('error', 'Por favor, digite uma busca.');
+            }
+        }
+    }
+
+    $('#finder .search').on('keypress', buscarCadastros);
+    $('#finder .find').on('click', buscarCadastros);
+
     $('select[name=estado]').on('change', function() {
         var $DOM = {
             cidade: $('select[name=cidade]'),
