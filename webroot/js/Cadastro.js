@@ -287,10 +287,10 @@ $(document).ready(function(){
         if (evento.type === 'keypress' && evento.keyCode === 13 || 
             evento.type === 'click' && evento.keyCode === undefined
         ) {
-            var busca = $DOM.busca.val().replace(/[ ]/g, '');
+            var busca = $DOM.busca.val();
             var filtro = $DOM.filtro.val();
 
-            if (filtro && busca !== '') {
+            if (filtro && busca.replace(/[ ]/g, '') !== '') {
                 window.location.assign('/Cadastro/index/busca/' + filtro + '/' + window.btoa(busca));
             }
             else {
