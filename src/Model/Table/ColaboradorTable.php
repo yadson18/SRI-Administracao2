@@ -21,7 +21,7 @@
 		{
 			$colaborador = $this->find(['cod_colaborador', 'nome', 'funcao'])
 				->where([
-					'login =' => $login, 'and',
+					'nome =' => $login, 'and',
 					'senha =' => $senha
 				])
 				->fetch('class');
