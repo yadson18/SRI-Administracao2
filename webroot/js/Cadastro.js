@@ -221,8 +221,8 @@ $(document).ready(function(){
                                 $('<td></td>', { html: dataFormatoBr(valor.vencimento) }),
                                 $('<td></td>', { html: dataFormatoBr(valor.ativacao) }),
                                 $('<td></td>', { html: dataFormatoBr(valor.ultima_cobranca) }),
-                                $('<td></td>', { html: valor.valor}).mask(
-                                    '000.000.000,0', { reverse: true }
+                                $('<td></td>', { html: valor.valor }).mask(
+                                    '000.000.000,00', { reverse: true }
                                 ),
                                 $('<td></td>', { html: valor.modalidade }),
                                 $('<td></td>', { html: (valor.nfe == 1) ? 'SIM' : 'NÃO' }),
