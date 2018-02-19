@@ -160,7 +160,20 @@ $(document).ready(function(){
                                             $DOM.numero.val(dados.numero);
                                             $DOM.complemento.val(dados.complemento);
                                         }
+                                        else {
+                                            $DOM.mensagem.bootstrapAlert(
+                                                'error', 'Os dados cadastrais referentes a esse CNPJ, estão desativados.'
+                                            );
+                                        }
                                     }
+                                    else {
+                                        $DOM.mensagem.bootstrapAlert('error', 'Desculpe, nada foi encontrado.');
+                                    }
+                                }
+                                else {
+                                    $DOM.mensagem.bootstrapAlert(
+                                        'warning', 'Não foi possível completar a operação, verifique sua conexão com a internet.'
+                                    );
                                 }
                             });
                         }
@@ -212,9 +225,19 @@ $(document).ready(function(){
                                     '000.000.000,0', { reverse: true }
                                 ),
                                 $('<td></td>', { html: valor.modalidade }),
-                                $('<td></td>', { html: (valor.nfe == 1) ? 'Sim' : 'Não' }),
+                                $('<td></td>', { html: (valor.nfe == 1) ? 'SIM' : 'NÃO' }),
                                 $('<td></td>', { html: valor.termi_adm }),
-                                $('<td></td>', { html: valor.status })
+                                $('<td></td>', { html: valor.status }),
+                                $('<td></td>', { 
+                                    class: 'actions',
+                                    html: [
+                                        $('<a></a>', {
+                                            html: $('<i></i>', { class: 'fas fa-pencil-alt' }),
+                                            href: '/Contrato/edit/' + valor.seq,
+                                            class: 'btn btn-primary btn-xs'
+                                        })
+                                    ]
+                                })
                             ]
                         }));
                     });

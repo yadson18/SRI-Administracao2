@@ -65,16 +65,16 @@
 		->set('Databases', [
 			'SRICASH' => [
 				'driver' => 'Firebird',
-				'host' => 'localhost',		 
-				'path' => '/var/SRI/DADOSVR/SRICASH.FDB',  
+				'host' => '192.168.0.210',		 
+				'path' => 'C:\SRIAUTOMACAO\DADOSVR\SRICASH.FDB',  
 				'user' => 'SYSDBA',
 				'password' => 'masterkey',
 				'encoding' => 'utf-8'
 			],
 			'SRICASH2' => [
 				'driver' => 'Firebird',
-				'host' => 'localhost',		 
-				'path' => '/var/SRI/DADOSVR/SRICASH2.FDB',  
+				'host' => '192.168.0.210',		 
+				'path' => 'C:\SRIAUTOMACAO\DADOSVR\SRICASH2.FDB',  
 				'user' => 'SYSDBA',
 				'password' => 'masterkey',
 				'encoding' => 'utf-8'

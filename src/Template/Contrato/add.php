@@ -113,8 +113,13 @@
 							</div>
 						</div>
 						<div class='form-group col-md-3 col-sm-4'>
-							<?= $this->Form->select('PDV', ['NÃO' => 0, 'SIM' => 1], [
-									'name' => 'hardware'
+							<?= $this->Form->input('PDV', [
+									'placeholder' => 'EX: 5',
+									'name' => 'hardware',
+									'type' => 'number',
+									'value' => 0,
+									'max' => 9,
+									'min' => 0
 								]) 
 							?>
 						</div>
@@ -136,7 +141,7 @@
 							<i class='fas fa-angle-right text-primary'></i> Lista de Equipamentos
 						</legend>
 						<div class='form-group col-sm-12'>
-							<button type='button' class='btn btn-success btn-sm'>
+							<button type='button' class='btn btn-success btn-sm add-equip'>
 								Adicionar Equipamento <i class='fas fa-plus'></i>
 							</button>
 						</div>
@@ -391,6 +396,31 @@
 				</div>
 			</div>
 		</div>
+    <!-- Modal End -->
+    <!-- Modal Confirmar Exclusão -->
+        <div class='modal fade' id='delete' role='dialog'>
+            <div class='modal-dialog' role='document'>
+                <div class='modal-content'>
+                    <div class='modal-header'>
+                        <button type='button' class='close' data-dismiss='modal'>
+                            <i class='fas fa-times'></i>
+                        </button>
+                        <h4 class='modal-title text-center'>Excluir Equipamento</h4>
+                    </div>
+                    <div class='modal-body text-center'>
+                        <h4>Deseja realmente excluir este equipamento?</h4>
+                    </div>
+                    <div class='modal-footer'>
+                    	<button data-dismiss='modal' class='btn btn-danger exit'>
+                    		Não <i class='fas fa-times'></i>
+                    	</button>
+                    	<button class='btn btn-success confirm' data-dismiss='modal'>
+                    		Sim <i class='fas fa-check'></i>
+                    	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     <!-- Modal End -->
     <!-- Modal Listar Vendedores -->
         <div class='modal fade' id='vendedores' tabindex='-1' role='dialog'>

@@ -28,6 +28,14 @@
 				->fetch('class');
 		}
 
+		public function getContratoPorCod(int $seq)
+		{
+			return $this->find(['c.*', 'v.nome as vendedor'])
+				->from(['contrato c', 'vendedor v'])
+				->where(['c.seq =' => $seq, 'and', 'c.cod_vendedor = v.id'])
+				->fetch('class');
+		}
+
 		public function listaContratosPorCod(int $contratante)
 		{
 			return $this->find([

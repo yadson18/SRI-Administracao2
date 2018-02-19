@@ -12,9 +12,16 @@
 
 			$this->setTable('CONTRATO_SERIE');
 
-			$this->setPrimaryKey('seq_contrato');
+			$this->setPrimaryKey('serie_impressora');
 
 			$this->setBelongsTo('', []);
+		}
+
+		public function getEquipamentosContrato(int $seq_contrato)
+		{
+			return $this->find(['numero_ecf', 'serie_impressora', 'modelo_impressora'])
+				->where(['seq_contrato =' => $seq_contrato])
+				->fetch('all');
 		}
 
 		protected function defaultValidator(Validator $validator)

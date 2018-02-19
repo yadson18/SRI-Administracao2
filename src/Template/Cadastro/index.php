@@ -176,6 +176,7 @@
 							        	<th>NF-e</th>
 							        	<th>N° Terminais ADM</th>
 							        	<th>Situação</th>
+							        	<th>Ações</th>
 							      	</tr>
 							    </thead>
 							    <tbody class='text-capitalize'></tbody>

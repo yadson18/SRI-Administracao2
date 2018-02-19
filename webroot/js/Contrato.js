@@ -136,6 +136,87 @@ $(document).ready(function(){
     	}
     });
 
+    $('.add-equip').on('click', function() {
+        var $DOM = {
+            equipamentos: $('table tbody.equipamentos'),
+            mensagem: $('.form-body .message-box')
+        };
+        var equipamentos = $DOM.equipamentos.children().length;
+
+        if (equipamentos > 0) {
+            $DOM.mensagem.empty();
+            $DOM.equipamentos.append($('<tr></tr>', {
+                id: equipamentos,
+                html: [
+                    $('<th></th>', { html: (equipamentos + 1) }),
+                    $('<td></td>', {
+                        html: $('<input/>', { 
+                            name: 'equipamento[' + equipamentos + '][numero_ecf]',
+                            class: 'form-control input-sm',
+                            placeholder: 'EX: 072',
+                            required: true,
+                            maxlength: 4
+                        })
+                    }),
+                    $('<td></td>', {
+                        html: $('<input/>', { 
+                            name: 'equipamento[' + equipamentos + '][serie_impressora]',
+                            class: 'form-control input-sm',
+                            placeholder: 'EX: RD58545664',
+                            required: true,
+                            maxlength: 30
+                        })
+                    }),
+                    $('<td></td>', {
+                        html: $('<input/>', { 
+                            name: 'equipamento[' + equipamentos + '][modelo_impressora]',
+                            class: 'form-control input-sm',
+                            placeholder: 'EX: HP DESKJET',
+                            required: true,
+                            maxlength: 12
+                        })
+                    }),
+                    $('<td></td>', {
+                        html: $('<button></button>', {
+                            html: $('<i></i>', { class: 'fas fa-trash-alt' }),
+                            class: 'btn btn-danger btn-xs',
+                            'data-target': '#delete',
+                            'data-toggle': 'modal',
+                            value: equipamentos,
+                            type: 'button'
+                        })
+                    })
+                ]
+            }));
+        }
+        else {
+            $DOM.mensagem.bootstrapAlert('warning', 'Por favor, adicione um cliente ao contrato.');
+        }
+    });
+
+    $('#contrato-add #delete').on('show.bs.modal', function(evento) {
+        var $DOM = {
+            equipamentos: $('table tbody.equipamentos'),
+            mensagem: $('.form-body .message-box'),
+            botao: $(evento.relatedTarget)
+        };
+
+        $(this).find('.confirm').on('click', function() {
+            $DOM.linhaParaRemover = $('#' + $DOM.botao.val());
+
+            if ($DOM.linhaParaRemover.length > 0) {
+                $DOM.linhaParaRemover.remove();
+                $DOM.equipamentos.find('th').each(function(indice) { $(this).text(++indice); });
+            }
+            else {
+                $DOM.mensagem.bootstrapAlert('error', 'Desculpe, o equipamento não pode ser deletado.');
+            }
+        });
+    })
+    .on('hidden.bs.modal', function(evento) {
+        $(this).find('.confirm').off('click');
+    });
+
     $('#vendedores .inserir').on('click', function() {
         var $DOM = {
             linhaSelecionada: $('#vendedores .check-unic:checked').closest('tr'),
@@ -158,7 +239,7 @@ $(document).ready(function(){
 
 	$('select[name=sintetico]').on('change', function() {
 		var $DOM = {
-			mensagem: $('.form-content .message-box'),
+			mensagem: $('.form-body .message-box'),
 			analitico: $('select[name=analitico]')
 		};
 
@@ -196,7 +277,6 @@ $(document).ready(function(){
 
 	$('#breadcrumb .contract-pages a').on('click', function() {
         var $DOM = {
-            mensagem: $('.form-content .message-box'),
             contratante: $('.contratante'),
             financeiro: $('.financeiro')
         };

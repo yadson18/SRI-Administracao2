@@ -43,8 +43,8 @@
 					$equipamentosSalvos = 0;
 
 					if (isset($seqContrato->seq) && is_numeric($seqContrato->seq)) {
-						foreach ($equipamentos as $equipamento) {
-							$equipamento = $contratoSerie->patchEntity($contratoSerie->newEntity(), $equipamento);
+						foreach ($equipamentos as $equipamentoDados) {
+							$equipamento = $contratoSerie->patchEntity($contratoSerie->newEntity(), $equipamentoDados);
 							$equipamento->seq_contrato = $seqContrato->seq;
 							$equipamento->atualizar = 'T';
 							$equipamento->dias = 60;
@@ -77,6 +77,80 @@
 				'bancos' => $banco->getBancos(),
 				'cadastro' => $cadastroEntity
 			]);
+			$this->setTitle('Adicionar Contrato');
+		}
+
+		public function edit($seq = null)
+		{
+			$contratoSerie = TableRegistry::get('ContratoSerie');
+			$modalidade = TableRegistry::get('Modalidade');
+			$planoConta = TableRegistry::get('PlanoConta');
+			$vendedor = TableRegistry::get('Vendedor');
+			$contrato = $this->Contrato->newEntity();
+			$status = TableRegistry::get('Status');
+			$banco = TableRegistry::get('Banco');
+			$usuario = $this->Auth->getUser();
+
+			if (is_numeric($seq)) {
+				if ($this->request->is('GET')) {
+					$contrato = $this->Contrato->getContratoPorCod($seq);
+				}
+				else if ($this->request->is('POST')) {
+					$dados = $this->Contrato->normalizarDados($this->request->getData());
+					if (isset($dados['equipamento'])) {
+						$equipamentos = $dados['equipamento'];
+						unset($dados['equipamento']);
+					}
+					$contrato = $this->Contrato->patchEntity($contrato, $dados);
+					$contrato->seq = $seq;
+					
+					if ($this->Contrato->save($contrato)) {
+						$equipamentosSalvos = 0;
+
+						foreach ($equipamentos as $equipamentoDados) {
+							$equipamento = $contratoSerie->patchEntity(
+								$contratoSerie->newEntity(), $equipamentoDados
+							);
+
+							if ($contratoSerie->save($equipamento)) {
+								$equipamentosSalvos++;
+							}
+						}
+
+						if (sizeof($equipamentos) === $equipamentosSalvos) {
+							$this->Flash->success('O contrato do cliente (' . $contrato->razao_social . ') foi modificado com sucesso.');
+						}
+						else {
+							$this->Flash->warning('O contrato do cliente (' . $contrato->razao_social . ') foi modificado com sucesso, mas não foi possível alterar os dados de alguns equipamentos.');
+						}
+					}
+					else {
+						$this->Flash->error('Não foi possível modificar o contrato do cliente (' . $contrato->razao_social . ').');
+					}
+
+				}
+			}
+
+			if (isset($contrato->contratante)) {
+				$this->setViewVars([
+					'equipamentos' => $contratoSerie->getEquipamentosContrato($seq),
+					'analiticos' => $planoConta->getAnaliticosPorCod($contrato->sintetico),
+					'modalidades' => $modalidade->getModalidades(),
+					'sinteticos' => $planoConta->getSinteticos(),
+					'vendedores' => $vendedor->listaVendedores(),
+					'status' => $status->getStatus(),
+					'usuarioNome' => $usuario->nome,
+					'bancos' => $banco->getBancos(),
+					'contrato' => $contrato
+				]);
+			}
+			else {
+				$this->setViewVars([
+					'usuarioNome' => $usuario->nome,
+					'contrato' => null
+				]);
+			}
+			$this->setTitle('Modificar Contrato');
 		}
 
 		public function listaContratosPorCod()
@@ -114,6 +188,6 @@
 
 		public function beforeFilter()
 		{
-			$this->Auth->isAuthorized(['add', 'listaContratosPorCod']);
+			$this->Auth->isAuthorized(['add', 'edit', 'listaContratosPorCod']);
 		}
 	}
