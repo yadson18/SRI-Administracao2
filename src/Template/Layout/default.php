@@ -64,6 +64,11 @@
 			        				<i class='fas fa-file-alt'></i> Cadastrar Contrato
 			        			</a>
 			        		</li>
+			        		<li>
+			        			<a href='/ContratoSerie/index'>
+			        				<i class='far fa-address-card'></i> Manutenção de Licenças
+			        			</a>
+			        		</li>
 			        	</ul>
 			        	<ul class='nav navbar-nav navbar-right'>
 		        			<li class='dropdown'>

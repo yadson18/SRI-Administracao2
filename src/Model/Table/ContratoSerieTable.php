@@ -12,9 +12,65 @@
 
 			$this->setTable('CONTRATO_SERIE');
 
-			$this->setPrimaryKey('serie_impressora');
+			$this->setPrimaryKey('seq_contrato');
 
 			$this->setBelongsTo('', []);
+		}
+
+		public function getLicenca(int $seq_contrato, string $serie_impressora)
+		{
+			return $this->find(['serie_impressora'])
+				->where([
+					'seq_contrato =' => $seq_contrato, 'and',
+					'serie_impressora =' => $serie_impressora
+				])
+				->fetch('class');
+		}
+
+		public function listaLicensas(int $quantity = null, int $skipTo = null)
+		{
+			$licencas = $this->find([
+					'cs.seq_contrato', 'c.razao_social', 'm.descricao as modalidade',  
+					"case when(c.status = 8 and c.cancelado = 'T') 
+        				then 'CANCELADO'
+        				else s.descricao 
+    				end as status", 
+    				'cs.modelo_impressora', 'cs.dias', 'cs.atualizar', 
+    				'cs.serie_impressora', 'cs.ultima_renovacao'
+				])
+				->from(['contrato c', 'contrato_serie cs', 'status s', 'modalidade m']);
+
+			if (!empty($quantity)) {
+				$licencas->limit($quantity);
+			}
+			if (!empty($skipTo)) {
+				$licencas->skip($skipTo);
+			}
+				
+			return $licencas->where([
+					'c.seq = cs.seq_contrato', 'and',
+					'c.status = s.seq', 'and',
+					'c.modalidade = m.seq'
+				])
+				->orderBy(['razao_social'])
+				->fetch('all');
+		}
+
+		public function buscaLicensas(int $filtro, $valor)
+		{
+			$filtroNome = null;
+
+			switch ($filtro) {
+				case 1: $filtroNome = 'c.status'; break;
+				case 2: $filtroNome = 'cs.razao_social'; break;
+			}
+		}
+
+		public function contarLicencas()
+		{
+			return $this->find([])
+				->count('modelo_impressora')->as('quantidade')
+				->fetch('class');
 		}
 
 		public function getEquipamentosContrato(int $seq_contrato)
