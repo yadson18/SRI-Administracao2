@@ -66,7 +66,7 @@
 			        		</li>
 			        		<li>
 			        			<a href='/ContratoSerie/index'>
-			        				<i class='far fa-address-card'></i> Manutenção de Licenças
+			        				<i class='fas fa-address-card'></i> Manutenção de Licenças
 			        			</a>
 			        		</li>
 			        	</ul>

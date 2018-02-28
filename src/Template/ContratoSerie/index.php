@@ -8,16 +8,26 @@
 	<div class='container-fluid cadastro-lista'>
 		<div class='message-box'></div>
 		<div class='row' id='finder'>
-			<div class='col-sm-6 form-group'>
+			<div class='col-sm-5 form-group search'>
 				<div class='input-group icon-right'>
 					<span class='input-group-btn'>
-						<select class='btn btn-default btn-sm filter'>
-	  						<option value='1'>CÓDIGO</option>
-	  						<option value='2'>CNPJ/CPF</option>
+						<select class='btn btn-default btn-sm'>
+	  						<option value='1'>CNPJ/CPF</option>
+	  						<option value='2'>RAZÃO SOCIAL</option>
 						</select>
 					</span>
-					<input class='form-control input-sm search text-uppercase' placeholder='Digite sua busca aqui'/>
+					<input class='form-control input-sm text-uppercase' placeholder='Digite sua busca aqui'/>
 					<button class='btn btn-sm button fas fa-search icon icon-sm find'></button>
+				</div>
+			</div>
+			<div class='col-sm-7 pull-right filter'>
+				<div class='pull-right'>					
+					<label>Filtro <i class='fas fa-filter'></i>:</label>
+					<input type='radio' name='type' value='T'> Licenças Ativas.
+					<input type='radio' name='type' value='F'> Licenças Canceladas.
+					<button class='btn btn-primary btn-sm'>
+						Filtrar <i class='fas fa-search'></i>
+					</button>
 				</div>
 			</div>
 		</div>
@@ -31,7 +41,6 @@
 			        	<th>Situação</th>
 			        	<th>Modelo do Equipamento</th>
 			        	<th>Dias</th>
-			        	<th>Atualizar</th>
 			        	<th>Última Renovação</th>
 			        	<th>Ações</th>
 			      	</tr>
@@ -41,12 +50,11 @@
 				    		<?php foreach($licencas as $indice => $licenca): ?>
 					    		<tr id=<?= $licenca['serie_impressora'] ?>>
 					    			<th><?= ++$indice ?></th>
-						        	<td><?= $licenca['razao_social'] ?></td>
+						        	<td><?= $licenca['razao'] ?></td>
 									<td><?= $licenca['modalidade'] ?></td>
 									<td><?= $licenca['status'] ?></td>
 									<td><?= $licenca['modelo_impressora'] ?></td>
 									<td><?= $licenca['dias'] ?></td>
-									<td><?= $licenca['atualizar'] ?></td>
 									<td><?= date('d/m/Y', strtotime($licenca['ultima_renovacao'])) ?></td>
 									<td class='actions'>
 										<?php if ($licenca['atualizar'] === 'T'): ?>
@@ -124,4 +132,43 @@
 		});
 	}
 	$('#contratoserie-index .atualizar').on('click', atualizar);
+
+	function buscarLicencas(evento)
+    {
+        var $DOM = {
+            filtro: $('#finder .search select'),
+            mensagem: $('.message-box'),
+            busca: $('#finder .search input')
+        };
+
+        if (evento.type === 'keypress' && evento.keyCode === 13 || 
+            evento.type === 'click' && evento.keyCode === undefined
+        ) {
+            var busca = $DOM.busca.val();
+            var filtro = $DOM.filtro.val();
+
+            if (filtro && busca.replace(/[ ]/g, '') !== '') {
+                window.location.assign('/ContratoSerie/index/busca/' + filtro + '/' + window.btoa(busca));
+            }
+            else {
+                $DOM.mensagem.bootstrapAlert('error', 'Por favor, digite uma busca.');
+            }
+        }
+    }
+
+    $('#finder .search input').on('keypress', buscarLicencas);
+    $('#finder .search .find').on('click', buscarLicencas);
+    $('#finder .filter button').on('click', function() {
+		var $DOM = {
+            mensagem: $('.message-box'),
+            filtro: $('#finder .filter input:checked')
+        };
+
+        if ($DOM.filtro.length > 0 && $DOM.filtro.val()) {
+        	window.location.assign('/ContratoSerie/index/busca/3/' + window.btoa($DOM.filtro.val()));
+        }
+        else {
+            $DOM.mensagem.bootstrapAlert('error', 'Por favor, selecione um filtro.');
+        }
+	});
 </script>

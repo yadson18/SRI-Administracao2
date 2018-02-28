@@ -27,10 +27,10 @@
 				->fetch('class');
 		}
 
-		public function listaLicensas(int $quantity = null, int $skipTo = null)
+		protected function preparaBuscaLicenca()
 		{
-			$licencas = $this->find([
-					'cs.seq_contrato', 'c.razao_social', 'm.descricao as modalidade',  
+			return $this->find([
+					'cs.seq_contrato', 'cd.razao', 'm.descricao as modalidade',  
 					"case when(c.status = 8 and c.cancelado = 'T') 
         				then 'CANCELADO'
         				else s.descricao 
@@ -38,7 +38,15 @@
     				'cs.modelo_impressora', 'cs.dias', 'cs.atualizar', 
     				'cs.serie_impressora', 'cs.ultima_renovacao'
 				])
-				->from(['contrato c', 'contrato_serie cs', 'status s', 'modalidade m']);
+				->from([
+					'cadastro cd', 'contrato c', 'contrato_serie cs', 
+					'status s', 'modalidade m'
+				]);
+		}
+
+		public function listaLicensas(int $quantity = null, int $skipTo = null)
+		{
+			$licencas = $this->preparaBuscaLicenca();
 
 			if (!empty($quantity)) {
 				$licencas->limit($quantity);
@@ -48,11 +56,12 @@
 			}
 				
 			return $licencas->where([
+					'cd.cod_cadastro = c.contratante', 'and',
 					'c.seq = cs.seq_contrato', 'and',
 					'c.status = s.seq', 'and',
 					'c.modalidade = m.seq'
 				])
-				->orderBy(['razao_social'])
+				->orderBy(['cd.razao'])
 				->fetch('all');
 		}
 
@@ -61,15 +70,43 @@
 			$filtroNome = null;
 
 			switch ($filtro) {
-				case 1: $filtroNome = 'c.status'; break;
-				case 2: $filtroNome = 'cs.razao_social'; break;
+				case 1: $filtroNome = 'cd.cnpj'; break;
+				case 2: $filtroNome = 'cd.razao'; break;
+				case 3: $filtroNome = 'cs.atualizar'; break;
 			}
+
+			if (!empty($filtroNome)) {
+				$condicao = [
+					'cd.cod_cadastro = c.contratante', 'and',
+					'c.seq = cs.seq_contrato', 'and',
+					'c.status = s.seq', 'and',
+					'c.modalidade = m.seq', 'and'
+				];
+				$busca = $this->preparaBuscaLicenca()
+					->orderBy([$filtroNome])
+					->limit(100);
+
+				if ($filtro === 3) {
+					$condicao[$filtroNome.' ='] = $valor;
+				}
+				else {
+					$condicao[$filtroNome.' like '] = $valor.'%';
+				}
+				
+				return $busca->where($condicao)->fetch('all');
+			}
+			return false;
 		}
 
 		public function contarLicencas()
 		{
 			return $this->find([])
 				->count('modelo_impressora')->as('quantidade')
+				->from(['cadastro cd', 'contrato c', 'contrato_serie cs'])
+				->where([
+					'cd.cod_cadastro = c.contratante', 'and',
+					'c.seq = cs.seq_contrato'
+				])
 				->fetch('class');
 		}
 
