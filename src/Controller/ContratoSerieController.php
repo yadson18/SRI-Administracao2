@@ -60,7 +60,7 @@
 					if ($this->ContratoSerie->getLicenca($dados['seq_contrato'], $dados['serie_impressora'])) {
 						$licenca = $this->ContratoSerie->patchEntity($licenca, $dados);
 
-						if ($this->ContratoSerie->save($licenca)) {
+						if ($this->ContratoSerie->salvaEquipamento($licenca)) {
 							$this->Ajax->response('licencaAtualizada', [
 								'status' => 'success',
 								'message' => 'A licença foi atualizada com sucesso.'
