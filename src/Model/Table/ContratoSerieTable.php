@@ -2,6 +2,7 @@
 	namespace App\Model\Table;
 
 	use Simple\ORM\Components\Validator;
+	use App\Model\Entity\ContratoSerie;
 	use Simple\ORM\Table;
 
 	class ContratoSerieTable extends Table
@@ -115,6 +116,46 @@
 			return $this->find(['numero_ecf', 'serie_impressora', 'modelo_impressora'])
 				->where(['seq_contrato =' => $seq_contrato])
 				->fetch('all');
+		}
+
+		public function salvaEquipamento(ContratoSerie $equipamento)
+		{
+			$equipamento->dias = 30;
+
+			if (isset($equipamento->seq_contrato) &&
+				isset($equipamento->serie_impressora)
+			) {
+				$condicao = [
+					'seq_contrato =' => $equipamento->seq_contrato, 'and',
+					'serie_impressora =' => $equipamento->serie_impressora
+				];
+				$equipamentoExistente = $this->find([
+						'numero_ecf', 'serie_impressora', 'modelo_impressora',
+						'seq_contrato', 'dias'
+					])
+					->where($condicao)
+					->limit(1)
+					->fetch('class');
+
+				if ($equipamentoExistente) {
+					if ($equipamentoExistente != $equipamento) {
+						unset($equipamento->seq_contrato);
+						unset($equipamento->serie_impressora);
+						
+						return $this->update($this->getTable())
+							->set((array) $equipamento)
+							->where($condicao)
+							->fetch('rowCount');
+					}
+					return true;
+				}
+			 	$equipamento->atualizar = 'T';
+				
+				return $this->insert($this->getTable())
+					->values((array) $equipamento)
+					->fetch('rowCount');
+			}
+			return false;
 		}
 
 		protected function defaultValidator(Validator $validator)

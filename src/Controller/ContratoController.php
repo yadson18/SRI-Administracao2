@@ -22,7 +22,7 @@
 			$status = TableRegistry::get('Status');
 			$banco = TableRegistry::get('Banco');
 			$usuario = $this->Auth->getUser();
-			$equipamentos = null;
+			$equipamentos = [];
 
 			if ($this->request->is('GET')) {
 				if (is_numeric($cnpj)) {
@@ -44,22 +44,22 @@
 
 					if (isset($seqContrato->seq) && is_numeric($seqContrato->seq)) {
 						foreach ($equipamentos as $equipamentoDados) {
-							$equipamento = $contratoSerie->patchEntity($contratoSerie->newEntity(), $equipamentoDados);
+							$equipamento = $contratoSerie->patchEntity(
+								$contratoSerie->newEntity(), $equipamentoDados
+							);
 							$equipamento->seq_contrato = $seqContrato->seq;
-							$equipamento->atualizar = 'T';
-							$equipamento->dias = 60;
 
-							if ($contratoSerie->save($equipamento)) {
+							if ($contratoSerie->salvaEquipamento($equipamento)) {
 								$equipamentosSalvos++;
 							}
 						}
 					}
 
 					if (sizeof($equipamentos) === $equipamentosSalvos) {
-						$this->Flash->success('O contrato do cliente (' . $contrato->razao_social . ') foi salvo com sucesso.');
+						$this->Flash->success('O contrato do cliente (' . $contrato->razao_social . ') foi cadastrado com sucesso.');
 					}
 					else {
-						$this->Flash->warning('O contrato do cliente (' . $contrato->razao_social . ') foi salvo com sucesso, mas não foi possível cadastrar todos os equipamentos.');
+						$this->Flash->warning('O contrato do cliente (' . $contrato->razao_social . ') foi cadastrado com sucesso, mas não foi possível cadastrar todos os equipamentos.');
 					}
 				}
 				else {
@@ -90,6 +90,7 @@
 			$status = TableRegistry::get('Status');
 			$banco = TableRegistry::get('Banco');
 			$usuario = $this->Auth->getUser();
+			$equipamentos = [];
 
 			if (is_numeric($seq)) {
 				if ($this->request->is('GET')) {
@@ -111,8 +112,9 @@
 							$equipamento = $contratoSerie->patchEntity(
 								$contratoSerie->newEntity(), $equipamentoDados
 							);
+							$equipamento->seq_contrato = $seq;
 
-							if ($contratoSerie->save($equipamento)) {
+							if ($contratoSerie->salvaEquipamento($equipamento)) {
 								$equipamentosSalvos++;
 							}
 						}

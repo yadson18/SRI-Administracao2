@@ -186,9 +186,7 @@
 										    			</td>
 										    			<td>
 										    				<?= $this->Form->input('', [
-																	'class' => ($indice === 0) 
-																		? 'form-control input-sm disabled' 
-																		: 'form-control input-sm text-uppercase',
+																	'class' => 'form-control input-sm disabled',
 																	'name' => 'equipamento['. $indice .'][serie_impressora]',
 																	'value' => $equipamento['serie_impressora'],
 																	'maxlength' => 30
@@ -244,11 +242,16 @@
 							</div>
 						</div>
 						<div class='form-group col-md-3 col-sm-4'>
+							<?php $vendedorAtual = array_column($vendedores, 'nome', 'id'); ?>
 							<label>Código do Vendedor</label>
 							<div class='input-group'>
 						      	<?= $this->Form->input('', [
 										'class' => 'form-control input-sm disabled',
-										'value' => $contrato->cod_vendedor,
+										'value' => (
+											array_key_exists($contrato->cod_vendedor, $vendedorAtual)
+										) 
+											? $contrato->cod_vendedor 
+											: '',
 										'placeholder' => 'EX: 1',
 										'name' => 'cod_vendedor',
 										'maxlength' => 5,
@@ -265,7 +268,11 @@
 						<div class='form-group col-md-6 col-sm-8'>
 							<?= $this->Form->input('Nome do Vendedor', [
 									'class' => 'form-control input-sm disabled',
-									'value' => $contrato->vendedor,
+									'value' => (
+										array_key_exists($contrato->cod_vendedor, $vendedorAtual)
+									) 
+										? $vendedorAtual[$contrato->cod_vendedor] 
+										: '',
 									'placeholder' => 'EX: MATHEUS',
 									'id' => 'vendedor',
 									'name' => false

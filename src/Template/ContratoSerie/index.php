@@ -40,9 +40,10 @@
 			        	<th>Modalidade</th>
 			        	<th>Situação</th>
 			        	<th>Modelo do Equipamento</th>
+			        	<th>Serie do Equipamento</th>
 			        	<th>Dias</th>
 			        	<th>Última Renovação</th>
-			        	<th>Ações</th>
+			        	<th>Atualizar</th>
 			      	</tr>
 			    </thead>
 			    <?php if(!empty($licencas)): ?>
@@ -54,6 +55,7 @@
 									<td><?= $licenca['modalidade'] ?></td>
 									<td><?= $licenca['status'] ?></td>
 									<td><?= $licenca['modelo_impressora'] ?></td>
+									<td><?= $licenca['serie_impressora'] ?></td>
 									<td><?= $licenca['dias'] ?></td>
 									<td><?= date('d/m/Y', strtotime($licenca['ultima_renovacao'])) ?></td>
 									<td class='actions'>
