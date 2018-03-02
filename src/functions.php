@@ -1,21 +1,29 @@
 <?php 
-	function dinheiroParaFloat($number)
+	function dinheiroParaFloat($numero)
 	{
-		return preg_replace(['/[.]/', '/[,]/'], ['', '.'], $number);
+		return preg_replace(['/[.]/', '/[,]/'], ['', '.'], $numero);
 	}
 
-	function floatParaDinheiro($number)
+	function floatParaDinheiro($numero)
 	{
-		if (is_numeric($number)) {
-			return number_format($number, 2, ',', '.');
+		if (is_numeric($numero)) {
+			return number_format($numero, 2, ',', '.');
 		}
-		return $number;
+		return $numero;
 	}
 
-	function numeroFormatoBR($number)
+	function dataFormatoBR($data)
 	{
-		if (is_numeric($number)) {
-			return number_format($number, 0, '', '.');
+		if (is_string($data) && !empty($data)) {
+			return date('d/m/Y', strtotime($data));
 		}
-		return $number;
+		return $data;
+	}
+
+	function numeroFormatoBR($numero)
+	{
+		if (is_numeric($numero)) {
+			return number_format($numero, 0, '', '.');
+		}
+		return $numero;
 	}

@@ -68,7 +68,7 @@
 						</div>
 						<div class='form-group col-md-3 col-sm-4'>
 							<?= $this->Form->input('Data de Inclusão', [
-									'value' => date('d/m/Y', strtotime($contrato->data_inclusao)),
+									'value' => dataFormatoBR($contrato->data_inclusao),
 									'class' => 'form-control input-sm date',
 									'placeholder' => 'EX: ' . date('d/m/Y'),
 									'name' => 'data_inclusao'
@@ -77,7 +77,7 @@
 						</div>
 						<div class='form-group col-md-3 col-sm-4'>
 							<?= $this->Form->input('Data de Ativação', [
-									'value' => date('d/m/Y', strtotime($contrato->data_ativacao)),
+									'value' => dataFormatoBR($contrato->data_ativacao),
 									'class' => 'form-control input-sm date',
 									'placeholder' => 'EX: ' . date('d/m/Y'),
 									'name' => 'data_ativacao'
@@ -86,7 +86,7 @@
 						</div>
 						<div class='form-group col-md-3 col-sm-4'>
 							<?= $this->Form->input('Data de Vencimento', [
-									'value' => date('d/m/Y', strtotime($contrato->data_vencimento)),
+									'value' => dataFormatoBR($contrato->data_vencimento),
 									'class' => 'form-control input-sm date',
 									'placeholder' => 'EX: ' . date('d/m/Y'),
 									'name' => 'data_vencimento'
@@ -299,7 +299,7 @@
 						</div>
 						<div class='form-group col-md-4 col-sm-5'>
 							<?= $this->Form->input('Data da Última Cobrança', [
-									'value' => date('d/m/Y', strtotime($contrato->data_ultima_cobranca)),
+									'value' => dataFormatoBR($contrato->data_ultima_cobranca),
 									'class' => 'form-control input-sm date',
 									'placeholder' => 'EX: ' . date('d/m/Y'),
 									'name' => 'data_ultima_cobranca'

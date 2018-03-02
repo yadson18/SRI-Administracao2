@@ -235,7 +235,13 @@ $(document).ready(function(){
                                             html: $('<i></i>', { class: 'fas fa-pencil-alt' }),
                                             href: '/Contrato/edit/' + valor.seq,
                                             class: 'btn btn-primary btn-xs'
-                                        })
+                                        })/*,
+                                        $('<button></button>', {
+                                            html: $('<i></i>', { class: 'fas fa-trash-alt' }),
+                                            class: 'btn btn-danger btn-xs delete',
+                                            value: valor.seq,
+                                            type: 'button'
+                                        })*/
                                     ]
                                 })
                             ]
