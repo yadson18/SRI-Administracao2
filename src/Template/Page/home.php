@@ -13,11 +13,11 @@
 	    				</li>
 	    				<li class='list-group-item'>
 	    					Hoje 
-	    					<span class='badge thousand'><?= $cadastros->hoje ?></span>
+	    					<span class='badge'><?= numeroFormatoBR($cadastros->hoje) ?></span>
 	    				</li>
 	    				<li class='list-group-item'>
 	    					Total 
-	    					<span class='badge thousand'><?= $cadastros->total ?></span>
+	    					<span class='badge'><?= numeroFormatoBR($cadastros->total) ?></span>
 	    				</li>
 	    			</ul>
 	    			<div class='text-center'>
@@ -40,14 +40,14 @@
 	    				</li>
 	    				<li class='list-group-item'>
 	    					Hoje 
-	    					<span class='badge thousand'>
-	    						<?= $contratos->hoje ?>
+	    					<span class='badge'>
+	    						<?= numeroFormatoBR($contratos->hoje) ?>
 	    					</span>
 	    				</li>
 	    				<li class='list-group-item'>
 	    					Total 
-	    					<span class='badge thousand'>
-	    						<?= $contratos->total ?>
+	    					<span class='badge'>
+	    						<?= numeroFormatoBR($contratos->total) ?>
 	    					</span>
 	    				</li>
 	    			</ul>

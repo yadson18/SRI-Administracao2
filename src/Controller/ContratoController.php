@@ -13,10 +13,10 @@
 		public function add($cnpj = null)
 		{
 			$contratoSerie = TableRegistry::get('ContratoSerie');
+			$colaborador = TableRegistry::get('Colaborador');
 			$modalidade = TableRegistry::get('Modalidade');
 			$planoConta = TableRegistry::get('PlanoConta');
 			$cadastro = TableRegistry::get('Cadastro');
-			$vendedor = TableRegistry::get('Vendedor');
 			$contrato = $this->Contrato->newEntity();
 			$cadastroEntity = $cadastro->newEntity();
 			$status = TableRegistry::get('Status');
@@ -69,9 +69,9 @@
 
 			$this->setViewVars([
 				'analiticos' => $planoConta->getAnaliticosPorCod(0),
+				'colaboradores' => $colaborador->listaVendedores(),
 				'modalidades' => $modalidade->getModalidades(),
 				'sinteticos' => $planoConta->getSinteticos(),
-				'vendedores' => $vendedor->listaVendedores(),
 				'status' => $status->getStatus(),
 				'usuarioNome' => $usuario->nome,
 				'bancos' => $banco->getBancos(),
@@ -83,9 +83,9 @@
 		public function edit($seq = null)
 		{
 			$contratoSerie = TableRegistry::get('ContratoSerie');
+			$colaborador = TableRegistry::get('Colaborador');
 			$modalidade = TableRegistry::get('Modalidade');
 			$planoConta = TableRegistry::get('PlanoConta');
-			$vendedor = TableRegistry::get('Vendedor');
 			$contrato = $this->Contrato->newEntity();
 			$status = TableRegistry::get('Status');
 			$banco = TableRegistry::get('Banco');
@@ -94,7 +94,7 @@
 
 			if (is_numeric($seq)) {
 				if ($this->request->is('GET')) {
-					$contrato = $this->Contrato->getContratoPorCod($seq);
+					$contrato = $this->Contrato->get($seq);
 				}
 				else if ($this->request->is('POST')) {
 					$dados = $this->Contrato->normalizarDados($this->request->getData());
@@ -137,9 +137,9 @@
 				$this->setViewVars([
 					'equipamentos' => $contratoSerie->getEquipamentosContrato($seq),
 					'analiticos' => $planoConta->getAnaliticosPorCod($contrato->sintetico),
+					'colaboradores' => $colaborador->listaVendedores(),
 					'modalidades' => $modalidade->getModalidades(),
 					'sinteticos' => $planoConta->getSinteticos(),
-					'vendedores' => $vendedor->listaVendedores(),
 					'status' => $status->getStatus(),
 					'usuarioNome' => $usuario->nome,
 					'bancos' => $banco->getBancos(),

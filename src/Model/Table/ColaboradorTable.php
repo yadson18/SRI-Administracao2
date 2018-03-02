@@ -32,6 +32,13 @@
 			return false;
 		}
 
+		public function listaVendedores()
+		{
+			return $this->find(['cod_colaborador', 'nome'])
+				->orderBy(['nome'])
+				->fetch('all');
+		}
+
 		protected function defaultValidator(Validator $validator)
 		{
 			$validator->addRule('empresa')->notEmpty()->int()->size(4);

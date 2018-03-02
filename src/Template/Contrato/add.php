@@ -440,26 +440,24 @@
 									<tr>
 									    <th>#</th>
 									    <th>Código</th>
-									    <th>CPF</th>
 									    <th>Nome</th>
 									    <th>Selecionado</th>
 									</tr>
 								</thead>
-								<?php if (!empty($vendedores)): ?>
+								<?php if (!empty($colaboradores)): ?>
 									<tbody class='text-capitalize'>
-										<?php foreach ($vendedores as $indice => $vendedor): ?>
+										<?php foreach ($colaboradores as $indice => $colaborador): ?>
 											<tr>
 								    			<th><?= ++$indice ?></th>
-									        	<td class='id'><?= $vendedor['id'] ?></td>
-									        	<td class='cpfMask'><?= unmask($vendedor['cpf']) ?></td>
-									        	<td class='nome'><?= $vendedor['nome'] ?></td>
+									        	<td class='id'><?= $colaborador['cod_colaborador'] ?></td>
+									        	<td class='nome'><?= $colaborador['nome'] ?></td>
 									        	<td><input class='check-unic' type='checkbox'></td>
 									        </tr>
 										<?php endforeach ?>
 									</tbody>
 								<?php endif ?>
 							</table>
-							<?php if(empty($vendedores)): ?>
+							<?php if(empty($colaboradores)): ?>
 								<div class='text-center data-not-found'>
 									<h4>Nada a ser exibido. <i class='far fa-frown'></i></h4>
 								</div>		    	

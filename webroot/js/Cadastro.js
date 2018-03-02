@@ -221,7 +221,7 @@ $(document).ready(function(){
                                 $('<td></td>', { html: dataFormatoBr(valor.vencimento) }),
                                 $('<td></td>', { html: dataFormatoBr(valor.ativacao) }),
                                 $('<td></td>', { html: dataFormatoBr(valor.ultima_cobranca) }),
-                                $('<td></td>', { html: valor.valor }).mask(
+                                $('<td></td>', { html: parseFloat(valor.valor).toFixed(2) }).mask(
                                     '000.000.000,00', { reverse: true }
                                 ),
                                 $('<td></td>', { html: valor.modalidade }),
