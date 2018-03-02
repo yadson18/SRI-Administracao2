@@ -20,7 +20,6 @@
 		<?= $this->Html->script('jquery.cpfcnpj.min.js') ?>
 		<?= $this->Html->script('jquery-datetimepicker.min.js') ?>
 		<?= $this->Html->script('internal-functions.js') ?>
-		<script src='https://cdnjs.cloudflare.com/ajax/libs/chroma-js/1.3.6/chroma.min.js'></script>
 		
 		<?= $this->Html->less('mixin.less') ?>
 		<?= $this->Html->less($this->fetch('controller') . '.less') ?>
